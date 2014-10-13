@@ -101,9 +101,15 @@ public class DVFS {
 		int newCPUFreqPosition = findLowestFreqPositionThatMeetsThisCost(OC_expectedCPUCost, cpu.getCPUFreqs(), UC_cpuUtil);
 		int newGPUFreqPosition = findLowestFreqPositionThatMeetsThisCost(OG_expectedGPUCost, gpu.getGPUFreqs(), UG_gpuUtil);
 		
-	
-		gpu.setGPUFreq(newGPUFreqPosition);
-		cpu.setCPUFreq(newCPUFreqPosition);
+		int currentCPUFreqPosition = cpu.getCpuFreqPosition();
+		int currentGPUFreqPosinios = gpu.getGpuFreqPosition();
+		
+		if(currentCPUFreqPosition != newCPUFreqPosition){
+			cpu.setCPUFreq(newCPUFreqPosition);
+		}
+		if(currentGPUFreqPosinios != newGPUFreqPosition){
+			gpu.setGPUFreq(newGPUFreqPosition);
+		}
 		
 		Log.i(TAG, "New GPU Freq: " + newGPUFreqPosition + ", new CPU Freq: " + newCPUFreqPosition);
 	}
