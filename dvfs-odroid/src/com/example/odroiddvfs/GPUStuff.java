@@ -30,10 +30,15 @@ public class GPUStuff {
 	public GPUStuff(IOStuff io){
 		this.io = io;
 		gpuFreqs = getGPUFreqs();
-		gpuFreqPosition = gpuFreqs.length - 1; //Assume it is the lowest at the beginning
+		setGPUFreq(0);
+	}
+	
+	public int getGpuFreqPosition(){
+		return gpuFreqPosition;
 	}
 	
 	public void setGPUFreq(int position){
+		gpuFreqPosition = position;
 		String newFrequency = gpuFreqs[position];
 		io.setThisValueToThisFile(newFrequency, FILE_GPU_MIN_FREQ);
 		io.setThisValueToThisFile(newFrequency, FILE_GPU_MAX_FREQ);

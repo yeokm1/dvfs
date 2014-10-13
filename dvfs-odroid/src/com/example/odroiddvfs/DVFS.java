@@ -46,6 +46,8 @@ public class DVFS {
 				
 				
 				Log.i(TAG, "FPS: " + Integer.toString(fps) + ", GPU: " + Float.toString(gpuUtil) + ", CPU: " + Float.toString(cpuUtil));
+				
+				processInputs(fps, gpuUtil, cpuUtil);
 
 			}
 		}, 0, 1000, TimeUnit.MILLISECONDS);
@@ -61,6 +63,24 @@ public class DVFS {
 
 		}
 	}
+	
+	
+	private void processInputs(int fps, float gpuUtil, float cpuUtil){
+		if(fps > fpsHighBound){
+			lowerFPS();
+		} else if(fps < fpsLowBound){
+			increaseFPS();
+		}
+	}
+	
+	private void lowerFPS(){
+		
+	}
+	
+	private void increaseFPS(){
+		
+	}
+	
 	
 	
 	
