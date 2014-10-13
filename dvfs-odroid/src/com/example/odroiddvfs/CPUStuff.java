@@ -45,7 +45,7 @@ public class CPUStuff {
 		io.setThisValueToThisFile(newFrequency, FILE_CPU_SCALING_FREQ);
 	}
 	
-	public double getCPUUtilisation() {
+	public float getCPUUtilisation() {
 	
 	  String cpuOutput = IOStuff.getStringFromFile(FILE_CPU_UTIL);
 
@@ -65,7 +65,7 @@ public class CPUStuff {
 	   long currentLoad = user + nice + system + iowait + irq + softirq;
 	   long currentTotal = currentLoad + currentIdle;
 	   
-	   double util = (((double) (currentLoad - prevLoad)) / (currentTotal - prevTotal)) * 100;
+	   float util = (float) ((((double) (currentLoad - prevLoad)) / (currentTotal - prevTotal)) * 100);
 	   
 	   prevLoad = currentLoad;
 	   prevTotal = currentTotal;
