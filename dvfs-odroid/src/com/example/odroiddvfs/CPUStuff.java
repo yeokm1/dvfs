@@ -1,14 +1,46 @@
 package com.example.odroiddvfs;
 
+import java.util.Arrays;
+
 public class CPUStuff {
 	
+	public static final String FILE_CPU_SCALING_FREQ = "/sys/devices/system/cpu/cpu0/cpufreq/scaling_setspeed";
+	public static final String FILE_CPU_SCALING_GOVERNER = "/sys/devices/system/cpu/cpu0/cpufreq/scaling_governor";
+	public static final String FILE_CPU_AVAILABLE_FREQS = "/sys/devices/system/cpu/cpufreq/iks-cpufreq/freq_table";
+	
 	private static final String FILE_CPU_UTIL = "/proc/stat";
+	
+	private static final int LOWEST_FREQ_POSITION = 2; //1.6Ghz
+	private static final int HIGHEST_FREQ_POSITION = 12;
 	
 	private long prevLoad = 0;
 	private long prevTotal = 0;
 	
-	public CPUStuff(){
-		
+	private String[] cpuFreqs;
+	private int cpuFreqPosition;
+	
+	private IOStuff io;
+	
+	public CPUStuff(IOStuff io){
+		this.io = io;
+		this.cpuFreqs = getCPUFreqs();
+		cpuFreqPosition = cpuFreqs.length - 1; //Assume it is the lowest at the beginning
+		setGovernorToUserspace();
+	}
+	
+	public void setGovernorToUserspace(){
+		io.setThisValueToThisFile("userspace", FILE_CPU_SCALING_GOVERNER);
+	}
+	
+	public String[] getCPUFreqs(){
+		String[] givenFreqs = io.getAvailableOptionsFromFile(FILE_CPU_AVAILABLE_FREQS, false);
+		String[] selectedFreqs = Arrays.copyOfRange(givenFreqs, LOWEST_FREQ_POSITION, HIGHEST_FREQ_POSITION);
+		return selectedFreqs;
+	}
+	
+	public void setCPUFreq(int position){
+		String newFrequency = cpuFreqs[position];
+		io.setThisValueToThisFile(newFrequency, FILE_CPU_SCALING_FREQ);
 	}
 	
 	public double getCPUUtilisation() {

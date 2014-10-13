@@ -31,7 +31,7 @@ public class MainActivity extends Activity {
 		
 		io = new IOStuff();
 		gpu = new GPUStuff(io);
-		cpu = new CPUStuff();
+		cpu = new CPUStuff(io);
 
 	}
 

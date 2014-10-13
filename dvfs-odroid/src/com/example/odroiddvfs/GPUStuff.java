@@ -12,10 +12,32 @@ public class GPUStuff {
 	
 	public static final String FILE_GPU_UTIL = "/sys/module/pvrsrvkm/parameters/sgx_gpu_utilization";
 	
+	public static final String FILE_GPU_CURRENT_FREQ = "/sys/devices/platform/pvrsrvkm.0/sgx_dvfs_cur_clk";
+
+	public static final String FILE_GPU_MIN_FREQ = "/sys/devices/platform/pvrsrvkm.0/sgx_dvfs_min_lock";
+	public static final String FILE_GPU_MAX_FREQ = "/sys/devices/platform/pvrsrvkm.0/sgx_dvfs_max_lock";
+	public static final String FILE_GPU_AVAILABLE_FREQS = "/sys/devices/platform/pvrsrvkm.0/sgx_dvfs_table";
+	
+	private String[] gpuFreqs;
+	private int gpuFreqPosition;;
+	
+	
 	private IOStuff io;
 	
 	public GPUStuff(IOStuff io){
 		this.io = io;
+		gpuFreqs = getGPUFreqs();
+		gpuFreqPosition = gpuFreqs.length - 1; //Assume it is the lowest at the beginning
+	}
+	
+	public void setGPUFreq(int position){
+		String newFrequency = gpuFreqs[position];
+		io.setThisValueToThisFile(newFrequency, FILE_GPU_MIN_FREQ);
+		io.setThisValueToThisFile(newFrequency, FILE_GPU_MAX_FREQ);
+	}
+	
+	public String[] getGPUFreqs(){
+		return io.getAvailableOptionsFromFile(FILE_GPU_AVAILABLE_FREQS, false);
 	}
 	
 	public float getGPUUtilisation(){

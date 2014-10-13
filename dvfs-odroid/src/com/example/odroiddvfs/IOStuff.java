@@ -12,11 +12,16 @@ import android.util.Log;
 import android.view.View;
 
 public class IOStuff {
+	public static final String COMMAND_ECHO_FORMAT = "echo %1$s > %2$s";
+	public static final String TAG = "IOStuff";
 	public static final int BUFF_LEN = 1000;
+	
+	public static final String COMMAND_CAT_FORMAT = "cat %1$s";
 	
 	private Process process;
 	private DataOutputStream stdin;
 	private InputStream stdout;
+	
 	
 	
 	public IOStuff(){
@@ -31,6 +36,26 @@ public class IOStuff {
 			return output;
 		} catch (IOException e) {
 			return "";
+		}
+
+	}
+	
+	public void setThisValueToThisFile(String value, String filePath){
+		String command = String.format(COMMAND_ECHO_FORMAT, value, filePath);
+		runStaticCommandAsRoot(command);
+	}
+	
+	public String[] getAvailableOptionsFromFile(String filename, boolean needsRoot){
+		String result = getCurrentField(filename, needsRoot);
+		String[] splitted = result.trim().split(" ");
+		return splitted;
+	}
+	
+	public String getCurrentField(String filename, boolean needsRoot){
+		if(needsRoot){
+			return runStaticCommandAsRoot(String.format(COMMAND_CAT_FORMAT, filename));
+		} else {
+			return runAndGetStaticCommandOutput(String.format(COMMAND_CAT_FORMAT, filename));
 		}
 
 	}
@@ -138,4 +163,34 @@ public class IOStuff {
 		}
 
 	}
+	
+	private String runAndGetStaticCommandOutput(String command){
+		Log.d("TAG", "Run Command: " + command);
+		try {
+			Process process = Runtime.getRuntime().exec(command);
+			BufferedReader bufferedReader = new BufferedReader(
+					new InputStreamReader(process.getInputStream()));
+
+			StringBuilder log=new StringBuilder();
+			String line = "";
+			while ((line = bufferedReader.readLine()) != null) {
+				log.append(line);
+				log.append("\n");
+
+
+			}
+
+
+			String result = log.toString();
+			Log.d(TAG, "Run Command output: " + result);
+			return result;
+
+
+		}catch (IOException e) {
+
+		}
+
+		return "";
+	}
+	
 }
