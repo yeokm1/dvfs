@@ -63,7 +63,7 @@ public class CPUStuff {
 	   long currentLoad = user + nice + system + iowait + irq + softirq;
 	   long currentTotal = currentLoad + currentIdle;
 	   
-	   double util = ((double) (currentLoad - prevLoad)) / (currentTotal - prevTotal) * 100;
+	   double util = (((double) (currentLoad - prevLoad)) / (currentTotal - prevTotal)) * 100;
 	   
 	   prevLoad = currentLoad;
 	   prevTotal = currentTotal;
