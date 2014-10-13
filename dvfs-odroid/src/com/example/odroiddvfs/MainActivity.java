@@ -44,7 +44,7 @@ public class MainActivity extends Activity {
 			}
 			dvfs.start(fpsLowBound,fpsHighBound, slidingWindow);
 			
-			Toast.makeText(this, "Started, FPS Low: " + fpsLowBound + ", FPS", Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, "Started, FPS Low: " + fpsLowBound + ", FPS High: " + fpsHighBound + ", Sliding Window: " + slidingWindow, Toast.LENGTH_SHORT).show();
 		} catch (NumberFormatException e){
 			Toast.makeText(this, "Invalid Input", Toast.LENGTH_SHORT).show();
 		}
