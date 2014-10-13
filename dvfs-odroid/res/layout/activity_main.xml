@@ -4,32 +4,88 @@
     android:layout_height="match_parent"
     tools:context="${relativePackage}.${activityClass}" >
 
-    <TextView
-        android:id="@+id/outputView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="14dp"
-        android:text="No output yet" />
-
-    <Button
-        android:id="@+id/button1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/outputView"
-        android:layout_marginTop="134dp"
-        android:onClick="startButtonPress"
-        android:text="Start" />
-
     <Button
         android:id="@+id/button2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/button1"
-        android:layout_toRightOf="@+id/outputView"
+        android:layout_centerHorizontal="true"
         android:onClick="stopButtonPress"
         android:text="Stop" />
+
+    <Button
+        android:id="@+id/button1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginBottom="176dp"
+        android:onClick="startButtonPress"
+        android:text="Start" />
+
+    <EditText
+        android:id="@+id/fpsLowBound"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@+id/textView1"
+        android:layout_toRightOf="@+id/textView1"
+        android:ems="10"
+        android:inputType="number"
+        android:text="30" >
+
+        <requestFocus />
+    </EditText>
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="31dp"
+        android:text="FPS Low Bound:"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/fpsLowBound"
+        android:layout_marginTop="28dp"
+        android:text="FPS High Bound:"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <EditText
+        android:id="@+id/fpsHighBound"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/fpsLowBound"
+        android:layout_alignTop="@+id/textView2"
+        android:ems="10"
+        android:inputType="number"
+        android:text="35" />
+
+    <EditText
+        android:id="@+id/slidingWindow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/fpsHighBound"
+        android:layout_marginTop="23dp"
+        android:layout_toRightOf="@+id/textView3"
+        android:ems="10"
+        android:inputType="number"
+        android:text="5" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignTop="@+id/slidingWindow"
+        android:text="Sliding Window (s):"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
 </RelativeLayout>

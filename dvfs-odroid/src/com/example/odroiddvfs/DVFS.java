@@ -19,19 +19,22 @@ public class DVFS {
 	
 	private int fpsLowBound;
 	private int fpsHighBound;
+	private int slidingWindowLength;
 	
-	public DVFS(int fpsLowBound, int fpsHighBound){
+	public DVFS(){
 		io = new IOStuff();
 		io.startShell();
 		cpu = new CPUStuff(io);
 		gpu = new GPUStuff(io);
 		io.stopShell();
-		this.fpsLowBound = fpsLowBound;
-		this.fpsHighBound = fpsHighBound;
 	}
 	
 	
-	public void start(){
+	public void start(int fpsLowbound, int fpsHighBound, int slidingWindowLength){
+		this.fpsLowBound = fpsLowbound;
+		this.fpsHighBound = fpsHighBound;
+		this.slidingWindowLength = slidingWindowLength;
+		
 		io.startShell();
 
 
