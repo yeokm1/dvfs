@@ -4,10 +4,14 @@ public class CPUStuff {
 	
 	private static final String FILE_CPU_UTIL = "/proc/stat";
 	
-	private static long prevLoad = 0;
-	private static long prevTotal = 0;
+	private long prevLoad = 0;
+	private long prevTotal = 0;
 	
-	public static double getCPUUtilisation() {
+	public CPUStuff(){
+		
+	}
+	
+	public double getCPUUtilisation() {
 	
 	  String cpuOutput = IOStuff.getStringFromFile(FILE_CPU_UTIL);
 

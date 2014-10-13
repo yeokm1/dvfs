@@ -12,7 +12,13 @@ public class GPUStuff {
 	
 	public static final String FILE_GPU_UTIL = "/sys/module/pvrsrvkm/parameters/sgx_gpu_utilization";
 	
-	public static float getGPUUtilisation(){
+	private IOStuff io;
+	
+	public GPUStuff(IOStuff io){
+		this.io = io;
+	}
+	
+	public float getGPUUtilisation(){
 		String output = IOStuff.getStringFromFile(FILE_GPU_UTIL);
 		float numOutput = 0;
 		
@@ -45,7 +51,7 @@ public class GPUStuff {
     C) timestamp immediately after SF submitted that frame to the h/w
 
 	 */
-	public static int getFPS(double timeIntervalNanoSeconds){
+	public int getFPS(double timeIntervalNanoSeconds){
 		String[] output = getFPSCommandOutput();
 
 		if(output.length == 0 || output.length == 1){
@@ -73,14 +79,14 @@ public class GPUStuff {
 		return frameCount;
 	}
 
-	public static String[] splitLine(String input){
+	private String[] splitLine(String input){
 		String[] result = input.split("\t");
 		return result;
 	}
 
 
-	public static String[] getFPSCommandOutput(){
-		String out = IOStuff.getRunningCommandOutput(FPS_COMMAND);
+	private String[] getFPSCommandOutput(){
+		String out = io.getRunningCommandOutput(FPS_COMMAND);
 		String[] lines = out.split("\n");
 	//	Log.i(TAG, "Num Lines " + lines.length);
 

@@ -14,10 +14,14 @@ import android.view.View;
 public class IOStuff {
 	public static final int BUFF_LEN = 1000;
 	
-	private static Process process;
-	private static DataOutputStream stdin;
-	private static InputStream stdout;
+	private Process process;
+	private DataOutputStream stdin;
+	private InputStream stdout;
 	
+	
+	public IOStuff(){
+		
+	}
 
 	public static String getStringFromFile (String filePath){
 		try {
@@ -33,7 +37,7 @@ public class IOStuff {
 	
 
 	
-	public static void startShell(){
+	public void startShell(){
 		try {
 			process = Runtime.getRuntime().exec("su");
 			stdin = new DataOutputStream(process.getOutputStream());
@@ -42,7 +46,7 @@ public class IOStuff {
 		}
 	}
 	
-	public static void stopShell(){
+	public void stopShell(){
 		try {
 			if(process != null){
 				stdin.write("exit\n".getBytes());
@@ -60,14 +64,14 @@ public class IOStuff {
 	
 	
 	
-	public static void getRoot(View view){
+	public void getRoot(View view){
 		runStaticCommandAsRoot("ls");
 	}
 
 
 	
 
-	public static String getRunningCommandOutput(String command){
+	public String getRunningCommandOutput(String command){
 		try {
 			stdin.write((command).getBytes());
 
@@ -101,7 +105,7 @@ public class IOStuff {
 	
 
 
-	public static String runStaticCommandAsRoot(String command){
+	public String runStaticCommandAsRoot(String command){
 
 
 		try {
