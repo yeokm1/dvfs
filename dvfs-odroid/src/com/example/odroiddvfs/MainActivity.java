@@ -11,12 +11,15 @@ public class MainActivity extends Activity {
 	public static final String TAG = "MainActivity";
 	private DVFS dvfs;
 	
+	public static final int FPS_LOW = 30;
+	public static final int FPS_HIGH = 35;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		
-		dvfs = new DVFS();
+		dvfs = new DVFS(FPS_LOW, FPS_HIGH);
 	}
 
 	public void startButtonPress(View view){

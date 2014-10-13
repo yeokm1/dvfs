@@ -17,10 +17,15 @@ public class DVFS {
 	private ScheduledExecutorService scheduler;
 	public static final float TIME_INTERVAL_NANO_SECONDS = 1000000000;
 	
-	public DVFS(){
+	private int fpsLowBound;
+	private int fpsHighBound;
+	
+	public DVFS(int fpsLowBound, int fpsHighBound){
 		io = new IOStuff();
 		gpu = new GPUStuff(io);
 		cpu = new CPUStuff(io);
+		this.fpsLowBound = fpsLowBound;
+		this.fpsHighBound = fpsHighBound;
 	}
 	
 	
