@@ -1,6 +1,7 @@
 package com.example.odroiddvfs;
 
 import java.util.Arrays;
+import java.util.Collections;
 
 public class CPUStuff {
 	
@@ -35,6 +36,7 @@ public class CPUStuff {
 	public String[] getCPUFreqs(){
 		String[] givenFreqs = io.getAvailableOptionsFromFile(FILE_CPU_AVAILABLE_FREQS, false);
 		String[] selectedFreqs = Arrays.copyOfRange(givenFreqs, LOWEST_FREQ_POSITION, HIGHEST_FREQ_POSITION);
+		Collections.reverse(Arrays.asList(selectedFreqs));
 		return selectedFreqs;
 	}
 	

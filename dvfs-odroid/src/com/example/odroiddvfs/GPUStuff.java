@@ -1,5 +1,8 @@
 package com.example.odroiddvfs;
 
+import java.util.Arrays;
+import java.util.Collections;
+
 import android.util.Log;
 
 public class GPUStuff {
@@ -37,7 +40,10 @@ public class GPUStuff {
 	}
 	
 	public String[] getGPUFreqs(){
-		return io.getAvailableOptionsFromFile(FILE_GPU_AVAILABLE_FREQS, false);
+		String[] freqs = io.getAvailableOptionsFromFile(FILE_GPU_AVAILABLE_FREQS, false);
+		Collections.reverse(Arrays.asList(freqs));
+		return freqs;
+		
 	}
 	
 	public float getGPUUtilisation(){
