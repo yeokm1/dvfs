@@ -36,6 +36,7 @@ public class DVFS {
 		this.fpsLowBound = fpsLowbound;
 		this.fpsHighBound = fpsHighBound;
 		this.slidingWindowLength = slidingWindowLength;
+		currentSlidingWindowPosition = 0;
 
 		io.startShell();
 
