@@ -20,10 +20,6 @@ public class MainActivity extends Activity {
 
 	public static final float TIME_INTERVAL_NANO_SECONDS = 1000000000;
 
-	private long totalFramesPerSeconds = 0;
-	private int totalFrameCaptures = 0;
-
-
 
 
 	private ScheduledExecutorService scheduler;
@@ -38,8 +34,7 @@ public class MainActivity extends Activity {
 		Toast.makeText(this, "Started", Toast.LENGTH_SHORT).show();
 
 		IOStuff.startShell();
-		totalFramesPerSeconds = 0;
-		totalFrameCaptures = 0;
+
 
 		scheduler = Executors.newSingleThreadScheduledExecutor();
 
@@ -48,15 +43,13 @@ public class MainActivity extends Activity {
 			public void run() {
 				float gpuUtil = GPUStuff.getGPUUtilisation();
 				Log.i(TAG + " GPU", Float.toString(gpuUtil));
+				
+				double cpuUtil = CPUStuff.getCPUUtilisation();
+				Log.i(TAG + " CPU", Double.toString(cpuUtil));
 
 				int fps = GPUStuff.getFPS(TIME_INTERVAL_NANO_SECONDS);
-				//outputView.setText(Integer.toString(fps));
 				Log.i(TAG + " FPS", Integer.toString(fps));
 
-				if(fps > 0){
-					totalFrameCaptures++;
-					totalFramesPerSeconds += fps;
-				}
 			}
 		}, 0, 1000, TimeUnit.MILLISECONDS);
 
@@ -74,11 +67,6 @@ public class MainActivity extends Activity {
 			scheduler = null;
 
 		}
-		if(totalFrameCaptures != 0){
-			int average = (int) (totalFramesPerSeconds / totalFrameCaptures);
-			outputView.setText(Integer.toString(average));
-		}
-
 	}
 
 
