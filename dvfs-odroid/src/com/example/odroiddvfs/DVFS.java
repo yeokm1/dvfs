@@ -40,12 +40,12 @@ public class DVFS {
 			public void run() {
 				float gpuUtil = gpu.getGPUUtilisation();
 				
-				double cpuUtil = cpu.getCPUUtilisation();
+				float cpuUtil = cpu.getCPUUtilisation();
 
 				int fps = gpu.getFPS(TIME_INTERVAL_NANO_SECONDS);
 				
 				
-				Log.i(TAG, "FPS: " + Integer.toString(fps) + ", GPU: " + Float.toString(gpuUtil) + ", CPU: " + Double.toString(cpuUtil));
+				Log.i(TAG, "FPS: " + Integer.toString(fps) + ", GPU: " + Float.toString(gpuUtil) + ", CPU: " + Float.toString(cpuUtil));
 
 			}
 		}, 0, 1000, TimeUnit.MILLISECONDS);
