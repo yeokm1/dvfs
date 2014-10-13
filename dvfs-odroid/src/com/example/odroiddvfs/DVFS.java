@@ -94,7 +94,7 @@ public class DVFS {
 
 		currentSlidingWindowPosition++;
 
-		if(currentSlidingWindowPosition >= slidingWindowLength){
+		if(currentSlidingWindowPosition > slidingWindowLength){
 			currentSlidingWindowPosition = 0;
 			makeGPUMeetThisFPS(newFPSValue, fps, gpuUtil);
 		}

@@ -39,7 +39,7 @@ public class MainActivity extends Activity {
 			
 			if(fpsLowBound <= 0 || fpsHighBound > 60
 					|| fpsHighBound < fpsLowBound
-					|| slidingWindow <= 0){
+					|| slidingWindow < 0){
 				throw new NumberFormatException();
 			}
 			dvfs.start(fpsLowBound,fpsHighBound, slidingWindow);
