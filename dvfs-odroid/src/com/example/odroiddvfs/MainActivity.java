@@ -11,8 +11,8 @@ public class MainActivity extends Activity {
 	public static final String TAG = "MainActivity";
 	private DVFS dvfs;
 	
-	public static final int FPS_LOW = 30;
-	public static final int FPS_HIGH = 35;
+	public static final int FPS_LOW = 40;
+	public static final int FPS_HIGH = 50;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

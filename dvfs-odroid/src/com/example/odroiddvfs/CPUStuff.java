@@ -11,20 +11,22 @@ public class CPUStuff {
 	
 	private static final String FILE_CPU_UTIL = "/proc/stat";
 	
-	private static final int LOWEST_FREQ_POSITION = 0;
-	private static final int HIGHEST_FREQ_POSITION = 17;
+	private static final int LOWEST_FREQ_POSITION = 7; //0.6 GHz
+	private static final int HIGHEST_FREQ_POSITION = 17; //1.6 GHz
 	
 	private long prevLoad = 0;
 	private long prevTotal = 0;
 	
-	private String[] cpuFreqs;
+	private long[] cpuFreqs;
+	private String[] cpuFreqsString;
 	private int cpuFreqPosition;
 	
 	private IOStuff io;
 	
 	public CPUStuff(IOStuff io){
 		this.io = io;
-		this.cpuFreqs = getCPUFreqs();
+		cpuFreqsString = getCPUFreqStrings();
+		cpuFreqs = convertStringArrayToLong(cpuFreqsString);
 		setCPUFreq(0); //Assume it is the lowest at the beginning
 		setGovernorToUserspace();
 	}
@@ -33,22 +35,39 @@ public class CPUStuff {
 		io.setThisValueToThisFile("userspace", FILE_CPU_SCALING_GOVERNER);
 	}
 	
+	public long getCurrentCPUFrequency(){
+		return cpuFreqs[cpuFreqPosition];
+	}
+	
 	public int getCpuFreqPosition(){
 		return cpuFreqPosition;
 	}
 	
 	public void setCPUFreq(int position){
 		cpuFreqPosition = position;
-		String newFrequency = cpuFreqs[position];
+		String newFrequency = cpuFreqsString[position];
 		io.setThisValueToThisFile(newFrequency, FILE_CPU_SCALING_FREQ);
 	}
 	
+	public long[] getCPUFreqs(){
+		return cpuFreqs;
+	}
 	
-	public String[] getCPUFreqs(){
+	
+	private String[] getCPUFreqStrings(){
 		String[] givenFreqs = io.getAvailableOptionsFromFile(FILE_CPU_AVAILABLE_FREQS, false);
 		Collections.reverse(Arrays.asList(givenFreqs));
 		String[] selectedFreqs = Arrays.copyOfRange(givenFreqs, LOWEST_FREQ_POSITION, HIGHEST_FREQ_POSITION);
 		return selectedFreqs;
+	}
+	
+	public long[] convertStringArrayToLong(String[] array){
+		long[] output = new long[array.length];
+		for(int i = 0; i < array.length; i++){
+			output[i] = Long.parseLong(array[i]);
+		}
+		
+		return output;
 	}
 	
 

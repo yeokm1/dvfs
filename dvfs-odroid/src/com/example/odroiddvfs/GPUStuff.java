@@ -8,7 +8,7 @@ import android.util.Log;
 public class GPUStuff {
 
 	
-	private static final int NO_FPS_CALCULATED = -1;
+	public static final int NO_FPS_CALCULATED = -1;
 	public static final String FPS_COMMAND = "dumpsys SurfaceFlinger --latency SurfaceView\n";
 	
 	public static final String TAG = "GPU Stuff";
@@ -21,7 +21,8 @@ public class GPUStuff {
 	public static final String FILE_GPU_MAX_FREQ = "/sys/devices/platform/pvrsrvkm.0/sgx_dvfs_max_lock";
 	public static final String FILE_GPU_AVAILABLE_FREQS = "/sys/devices/platform/pvrsrvkm.0/sgx_dvfs_table";
 	
-	private String[] gpuFreqs;
+	private long[] gpuFreqs;
+	private String[] gpuFreqsString;
 	private int gpuFreqPosition;;
 	
 	
@@ -29,26 +30,44 @@ public class GPUStuff {
 	
 	public GPUStuff(IOStuff io){
 		this.io = io;
-		gpuFreqs = getGPUFreqs();
+		gpuFreqsString = getGPUFreqStrings();
+		gpuFreqs = convertStringArrayToLong(gpuFreqsString);
 		setGPUFreq(0);
+	}
+	
+	public long getCurrentGPUFrequency(){
+		return gpuFreqs[gpuFreqPosition];
 	}
 	
 	public int getGpuFreqPosition(){
 		return gpuFreqPosition;
 	}
 	
+	public long[] convertStringArrayToLong(String[] array){
+		long[] output = new long[array.length];
+		for(int i = 0; i < array.length; i++){
+			String element = array[i];
+			output[i] =  Long.parseLong(element);
+		}
+		
+		return output;
+	}
+	
 	public void setGPUFreq(int position){
 		gpuFreqPosition = position;
-		String newFrequency = gpuFreqs[position];
+		String newFrequency = gpuFreqsString[position];
 		io.setThisValueToThisFile(newFrequency, FILE_GPU_MIN_FREQ);
 		io.setThisValueToThisFile(newFrequency, FILE_GPU_MAX_FREQ);
 	}
 	
-	public String[] getGPUFreqs(){
+	public long[] getGPUFreqs(){
+		return gpuFreqs;
+	}
+	
+	public String[] getGPUFreqStrings(){
 		String[] freqs = io.getAvailableOptionsFromFile(FILE_GPU_AVAILABLE_FREQS, false);
 		Collections.reverse(Arrays.asList(freqs));
 		return freqs;
-		
 	}
 	
 	public float getGPUUtilisation(){

@@ -42,7 +42,7 @@ public class IOStuff {
 	
 	public void setThisValueToThisFile(String value, String filePath){
 		String command = String.format(COMMAND_ECHO_FORMAT, value, filePath);
-		runStaticCommandAsRoot(command);
+		getRunningCommandOutput(command);
 	}
 	
 	public String[] getAvailableOptionsFromFile(String filename, boolean needsRoot){
