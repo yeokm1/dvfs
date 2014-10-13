@@ -23,8 +23,8 @@ public class DVFS {
 	public DVFS(int fpsLowBound, int fpsHighBound){
 		io = new IOStuff();
 		io.startShell();
-		gpu = new GPUStuff(io);
 		cpu = new CPUStuff(io);
+		gpu = new GPUStuff(io);
 		io.stopShell();
 		this.fpsLowBound = fpsLowBound;
 		this.fpsHighBound = fpsHighBound;

@@ -27,8 +27,8 @@ public class CPUStuff {
 		this.io = io;
 		cpuFreqsString = getCPUFreqStrings();
 		cpuFreqs = convertStringArrayToLong(cpuFreqsString);
-		setCPUFreq(0); //Assume it is the lowest at the beginning
 		setGovernorToUserspace();
+		setCPUFreq(0); //Assume it is the lowest at the beginning
 	}
 	
 	public void setGovernorToUserspace(){
