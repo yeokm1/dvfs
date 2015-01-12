@@ -104,24 +104,33 @@ public class DVFS {
 			
 			currentSlidingWindowPosition = 0;
 			
-			float gpuUtil = gpu.getGPUUtilisation();
-			Log.i(TAG, "GPU Util: " + gpuUtil);
-			
-			makeGPUMeetThisFPS(newFPSValue, currentFPS, gpuUtil);
+			makeGPUMeetThisFPS(newFPSValue, currentFPS);
 		}
 		
-		float cpuUtil = cpu.getCPUUtilisation();
-		
-		Log.i(TAG, "CPU Util: " + cpuUtil);
+
 	
 
-		makeCPUMeetThisFPS(newFPSValue, currentFPS, cpuUtil);
+		makeCPUMeetThisFPS(newFPSValue, currentFPS);
 
 	}
 
 
-	private void makeCPUMeetThisFPS(int Q_targetFPS, int Q_currentFPS, double UC_cpuUtil){
+	private void makeCPUMeetThisFPS(int Q_targetFPS, int Q_currentFPS){
 		Log.i(TAG, "CPU meet this FPS: " + Q_targetFPS);
+		
+		int currentCPUFreqPosition = cpu.getCpuFreqPosition();
+		
+		long[] cpuFreqs = cpu.getCPUFreqs();
+		
+		if(currentCPUFreqPosition == 0 && Q_currentFPS >= Q_targetFPS //If we are at lowest GPU freq and still above target FPS, don't bother
+				|| currentCPUFreqPosition == (cpuFreqs.length - 1) && Q_targetFPS >= Q_currentFPS){ //If we are at highest frequency and still below target FPS don't bother
+			return;
+			
+		}
+		
+		float UC_cpuUtil = cpu.getCPUUtilisation();
+		
+		Log.i(TAG, "CPU Util: " + UC_cpuUtil);
 
 		long c_currentCPUFreq = cpu.getCurrentCPUFrequency();	
 
@@ -129,8 +138,8 @@ public class DVFS {
 		double OC_expectedCPUCost = PC_priceCPU * Q_targetFPS;
 
 
-		int newCPUFreqPosition = findLowestFreqPositionThatMeetsThisCost(OC_expectedCPUCost, cpu.getCPUFreqs(), UC_cpuUtil);
-		int currentCPUFreqPosition = cpu.getCpuFreqPosition();		
+		int newCPUFreqPosition = findLowestFreqPositionThatMeetsThisCost(OC_expectedCPUCost, cpuFreqs, UC_cpuUtil);
+
 
 		if(currentCPUFreqPosition != newCPUFreqPosition){
 			cpu.setCPUFreq(newCPUFreqPosition);
@@ -139,7 +148,22 @@ public class DVFS {
 		Log.i(TAG, "New CPU Freq: " + newCPUFreqPosition);
 	}
 
-	private void makeGPUMeetThisFPS(int Q_targetFPS, int Q_currentFPS, double UG_gpuUtil){
+	private void makeGPUMeetThisFPS(int Q_targetFPS, int Q_currentFPS){
+		Log.i(TAG, "GPU meet this FPS: " + Q_targetFPS);
+		
+		int currentGPUFreqPosition = gpu.getGpuFreqPosition();
+		
+		long[] gpuFreqs = gpu.getGPUFreqs();
+		
+		if(currentGPUFreqPosition == 0 && Q_currentFPS >= Q_targetFPS //If we are at lowest GPU freq and still above target FPS, don't bother
+				|| currentGPUFreqPosition == (gpuFreqs.length - 1) && Q_targetFPS >= Q_currentFPS){ //If we are at highest frequency and still below target FPS don't bother
+			return;
+			
+		}
+		
+		float UG_gpuUtil = gpu.getGPUUtilisation();
+		Log.i(TAG, "GPU Util: " + UG_gpuUtil);
+		
 		long g_currentGPUFreq = gpu.getCurrentGPUFrequency();
 
 		double PG_priceGPU = (UG_gpuUtil * g_currentGPUFreq) / Q_currentFPS;
@@ -147,10 +171,10 @@ public class DVFS {
 
 		double OG_expectedGPUCost = PG_priceGPU * Q_targetFPS;
 
-		int newGPUFreqPosition = findLowestFreqPositionThatMeetsThisCost(OG_expectedGPUCost, gpu.getGPUFreqs(), UG_gpuUtil);
+		int newGPUFreqPosition = findLowestFreqPositionThatMeetsThisCost(OG_expectedGPUCost, gpuFreqs, UG_gpuUtil);
 
 
-		int currentGPUFreqPosition = gpu.getGpuFreqPosition();
+
 
 
 		if(currentGPUFreqPosition != newGPUFreqPosition){
