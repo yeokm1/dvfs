@@ -16,6 +16,7 @@ public class DVFS {
 
 	private ScheduledExecutorService scheduler;
 	public static final float TIME_INTERVAL_NANO_SECONDS = 1000000000;
+	public static final int DO_NOT_PURSUE_FPS_VALUE = -1;
 
 	private int fpsLowBound;
 	private int fpsHighBound;
@@ -46,16 +47,18 @@ public class DVFS {
 		scheduler.scheduleAtFixedRate
 		(new Runnable() {
 			public void run() {
-				float gpuUtil = gpu.getGPUUtilisation();
+				int currentFPS = gpu.getFPS(TIME_INTERVAL_NANO_SECONDS);
+				
+				int newValueFPS = shouldPursueFPSRecalculationToThisFPS(currentFPS);
+				Log.i(TAG, "FPS: " + Integer.toString(currentFPS));
+				
+				if(newValueFPS != DO_NOT_PURSUE_FPS_VALUE){
+					processInputs(currentFPS, newValueFPS);
+				}
 
-				float cpuUtil = cpu.getCPUUtilisation();
-
-				int fps = gpu.getFPS(TIME_INTERVAL_NANO_SECONDS);
 
 
-				Log.i(TAG, "FPS: " + Integer.toString(fps) + ", GPU: " + Float.toString(gpuUtil) + ", CPU: " + Float.toString(cpuUtil));
 
-				processInputs(fps, gpuUtil, cpuUtil);
 
 			}
 		}, 0, 1000, TimeUnit.MILLISECONDS);
@@ -71,36 +74,48 @@ public class DVFS {
 
 		}
 	}
-
-
-	private void processInputs(int fps, float gpuUtil, float cpuUtil){
-
+	
+	private int shouldPursueFPSRecalculationToThisFPS(int fps){
 		if(fps == GPUStuff.NO_FPS_CALCULATED){
-			return;
+			return DO_NOT_PURSUE_FPS_VALUE;
 		}
-
-		int newFPSValue = 0;
 
 		if(fps > fpsHighBound){
 			//We need to decrease FPS
-			newFPSValue = fpsLowBound;
+			return fpsLowBound;
 		} else if(fps < fpsLowBound){
 			//We need to increase FPS
-			newFPSValue = fpsHighBound;
+			return fpsHighBound;
 		} else {
 			currentSlidingWindowPosition = 0;
-			return;
+			return DO_NOT_PURSUE_FPS_VALUE;
 		}
 
+	}
+
+
+	private void processInputs(int currentFPS, int newFPSValue){
+		
+		Log.i(TAG, "Current FPS: " + Integer.toString(currentFPS) + ", target FPS " + Integer.toString(newFPSValue));
 
 		currentSlidingWindowPosition++;
 
 		if(currentSlidingWindowPosition > slidingWindowLength){
+			
 			currentSlidingWindowPosition = 0;
-			makeGPUMeetThisFPS(newFPSValue, fps, gpuUtil);
+			
+			float gpuUtil = gpu.getGPUUtilisation();
+			Log.i(TAG, "GPU Util: " + gpuUtil);
+			
+			makeGPUMeetThisFPS(newFPSValue, currentFPS, gpuUtil);
 		}
+		
+		float cpuUtil = cpu.getCPUUtilisation();
+		
+		Log.i(TAG, "CPU Util: " + cpuUtil);
+	
 
-		makeCPUMeetThisFPS(newFPSValue, fps, cpuUtil);
+		makeCPUMeetThisFPS(newFPSValue, currentFPS, cpuUtil);
 
 	}
 
