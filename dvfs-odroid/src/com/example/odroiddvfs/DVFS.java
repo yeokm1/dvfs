@@ -150,10 +150,10 @@ public class DVFS {
 		int newGPUFreqPosition = findLowestFreqPositionThatMeetsThisCost(OG_expectedGPUCost, gpu.getGPUFreqs(), UG_gpuUtil);
 
 
-		int currentGPUFreqPosinios = gpu.getGpuFreqPosition();
+		int currentGPUFreqPosition = gpu.getGpuFreqPosition();
 
 
-		if(currentGPUFreqPosinios != newGPUFreqPosition){
+		if(currentGPUFreqPosition != newGPUFreqPosition){
 			gpu.setGPUFreq(newGPUFreqPosition);
 		}
 
