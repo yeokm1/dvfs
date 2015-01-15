@@ -5,6 +5,8 @@ import java.util.Collections;
 
 public class CPUStuff {
 	
+	private static final int NUM_CORES = 4;
+	
 	public static final String FILE_CPU_SCALING_FREQ = "/sys/devices/system/cpu/cpu0/cpufreq/scaling_setspeed";
 	public static final String FILE_CPU_SCALING_GOVERNER = "/sys/devices/system/cpu/cpu0/cpufreq/scaling_governor";
 	public static final String FILE_CPU_AVAILABLE_FREQS = "/sys/devices/system/cpu/cpufreq/iks-cpufreq/freq_table";
@@ -16,6 +18,9 @@ public class CPUStuff {
 	
 	private long prevLoad = 0;
 	private long prevTotal = 0;
+	
+	private double[] prevCoreLoad = new double[NUM_CORES];
+	private double[] prevCoreTotal = new double[NUM_CORES];
 	
 	private long[] cpuFreqs;
 	private String[] cpuFreqsString;
@@ -99,7 +104,53 @@ public class CPUStuff {
 
 	   return util;
 
-	} 
+	}
+	
+	public double getCoreWithHighestUtilisation(){
+		double[] coreUtils = getCPUCoresUtilisation();
+		
+		double highestUtil = 0;
+		for(double util : coreUtils){
+			if(util > highestUtil){
+				highestUtil = util;
+			}
+		}
+		
+		return highestUtil;
+	}
+	
+	public double[] getCPUCoresUtilisation(){
+		String[] toks = io.getAvailableOptionsFromFile(FILE_CPU_UTIL, false);
+
+		double[] util = new double[NUM_CORES];
+		int initialOffset = 11; //The initial offset is to skip the all cores fields
+		int subsequentOffset = 10;
+		
+		for(int i = 0; i < NUM_CORES; i++){
+			int start = initialOffset + (i * subsequentOffset);
+			
+			long user = Long.parseLong(toks[start + 1]);
+			long nice = Long.parseLong(toks[start + 2]);
+			long system = Long.parseLong(toks[start + 3]);
+			long currentIdle = Long.parseLong(toks[start + 4]);
+			long iowait = Long.parseLong(toks[start + 5]);
+			long irq = Long.parseLong(toks[start + 6]);
+			long softirq = Long.parseLong(toks[start + 7]);
+
+			long currentLoad = user + nice + system + iowait + irq + softirq;
+			long currentTotal = currentLoad + currentIdle;
+
+			util[i] = ((((double) (currentLoad - prevCoreLoad[i])) / (currentTotal - prevCoreTotal[i]))) * 100;
+
+			prevCoreLoad[i] = currentLoad;
+			prevCoreTotal[i] = currentTotal;
+		}
+		
+		return util;
+		
+		
+	}
+
 	
 	
 }

@@ -8,6 +8,10 @@ import android.util.Log;
 
 public class DVFS {
 
+	private static final int DVFS_UPDATE_RATE = 1000;
+
+	private static final float TARGET_CPU_UTILISATION = 80;
+
 	public static final String TAG = "DVFS";
 
 	private IOStuff io;
@@ -52,16 +56,21 @@ public class DVFS {
 				int newValueFPS = shouldPursueFPSRecalculationToThisFPS(currentFPS);
 				Log.i(TAG, "FPS: " + Integer.toString(currentFPS));
 				
-				if(newValueFPS != DO_NOT_PURSUE_FPS_VALUE){
-					processInputs(currentFPS, newValueFPS);
+
+				if(newValueFPS == DO_NOT_PURSUE_FPS_VALUE){
+					processInputs(currentFPS, newValueFPS, true);
+				} else {
+					processInputs(currentFPS, newValueFPS, false);
 				}
 
 
 
 
 
+
+
 			}
-		}, 0, 1000, TimeUnit.MILLISECONDS);
+		}, 0, DVFS_UPDATE_RATE, TimeUnit.MILLISECONDS);
 	}
 
 	public void stop(){
@@ -94,7 +103,15 @@ public class DVFS {
 	}
 
 
-	private void processInputs(int currentFPS, int newFPSValue){
+	private void processInputs(int currentFPS, int newFPSValue, boolean fpsInRange){
+		
+		Log.i(TAG, "Current FPS: " + Integer.toString(currentFPS) + ", target FPS " + Integer.toString(newFPSValue));
+
+		makeCPUMeetThisFPS(newFPSValue, currentFPS);
+		
+		if(fpsInRange){
+			return;
+		}
 		
 		Log.i(TAG, "Current FPS: " + Integer.toString(currentFPS) + ", target FPS " + Integer.toString(newFPSValue));
 
@@ -108,13 +125,9 @@ public class DVFS {
 		}
 		
 
-	
-
-		makeCPUMeetThisFPS(newFPSValue, currentFPS);
-
 	}
-
-
+	
+	
 	private void makeCPUMeetThisFPS(int Q_targetFPS, int Q_currentFPS){
 		Log.i(TAG, "CPU meet this FPS: " + Q_targetFPS);
 		
@@ -122,7 +135,7 @@ public class DVFS {
 		
 		long[] cpuFreqs = cpu.getCPUFreqs();
 		
-		float UC_cpuUtil = cpu.getCPUUtilisation();
+		double UC_cpuUtil = cpu.getCoreWithHighestUtilisation();
 		
 		Log.i(TAG, "CPU Util: " + UC_cpuUtil);
 
@@ -130,9 +143,17 @@ public class DVFS {
 
 		double PC_priceCPU = (UC_cpuUtil * c_currentCPUFreq) / Q_currentFPS;
 		double OC_expectedCPUCost = PC_priceCPU * Q_targetFPS;
+		
+		double targetCPUUtil;
+		
+		if(UC_cpuUtil > TARGET_CPU_UTILISATION){
+			targetCPUUtil = UC_cpuUtil;
+		} else {
+			targetCPUUtil = TARGET_CPU_UTILISATION;
+		}
 
 
-		int newCPUFreqPosition = findLowestFreqPositionThatMeetsThisCost(OC_expectedCPUCost, cpuFreqs, UC_cpuUtil);
+		int newCPUFreqPosition = findLowestFreqPositionThatMeetsThisCost(OC_expectedCPUCost, cpuFreqs, targetCPUUtil);
 
 
 		if(currentCPUFreqPosition != newCPUFreqPosition){
@@ -150,17 +171,17 @@ public class DVFS {
 		long[] gpuFreqs = gpu.getGPUFreqs();
 		
 		
-		float UG_gpuUtil = gpu.getGPUUtilisation();
-		Log.i(TAG, "GPU Util: " + UG_gpuUtil);
+		//float UG_gpuUtil = gpu.getGPUUtilisation();
+		//Log.i(TAG, "GPU Util: " + UG_gpuUtil);
 		
 		long g_currentGPUFreq = gpu.getCurrentGPUFrequency();
 
-		double PG_priceGPU = (UG_gpuUtil * g_currentGPUFreq) / Q_currentFPS;
+		double PG_priceGPU = (g_currentGPUFreq) / (double) Q_currentFPS;
 
 
 		double OG_expectedGPUCost = PG_priceGPU * Q_targetFPS;
 
-		int newGPUFreqPosition = findLowestFreqPositionThatMeetsThisCost(OG_expectedGPUCost, gpuFreqs, UG_gpuUtil);
+		int newGPUFreqPosition = findLowestFreqPositionThatMeetsThisCost(OG_expectedGPUCost, gpuFreqs, 1);
 
 
 
