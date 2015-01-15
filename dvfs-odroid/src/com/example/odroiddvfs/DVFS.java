@@ -58,7 +58,7 @@ public class DVFS {
 				
 
 				if(newValueFPS == DO_NOT_PURSUE_FPS_VALUE){
-					processInputs(currentFPS, newValueFPS, true);
+					processInputs(currentFPS, currentFPS, true);
 				} else {
 					processInputs(currentFPS, newValueFPS, false);
 				}
