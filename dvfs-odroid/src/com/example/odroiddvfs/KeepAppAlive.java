@@ -5,13 +5,12 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
-import android.support.v4.app.NotificationCompat;
 
 public class KeepAppAlive extends Service{
 
 
 	
-	private static final int ONGOING_NOTIFICATION = 144;
+	private static final int ONGOING_NOTIFICATION = 123;
 
 
 	public void onCreate() {
@@ -46,9 +45,10 @@ public class KeepAppAlive extends Service{
 	public Notification createNotification(String title, String subtext){
 		Intent intent = new Intent(this,MainActivity.class);
 		PendingIntent pending=PendingIntent.getActivity(this, 0, intent, 0);
+	
 
-		NotificationCompat.Builder mBuilder =
-				new NotificationCompat.Builder(this)
+		Notification.Builder mBuilder =
+				new Notification.Builder(this)
 		.setSmallIcon(R.drawable.ic_launcher)
 		.setContentTitle(title)
 		.setContentText(subtext)

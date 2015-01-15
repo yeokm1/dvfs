@@ -5,7 +5,7 @@ import android.content.Intent;
 
 public class MyApplication extends Application {
 	 public void onCreate(){
-		Intent keepAppIntent= new Intent(getApplicationContext(), KeepAppAlive.class);
+		Intent keepAppIntent= new Intent(this, KeepAppAlive.class);
 		startService(keepAppIntent);
 	 }
 	 
