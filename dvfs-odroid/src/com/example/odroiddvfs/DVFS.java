@@ -122,12 +122,6 @@ public class DVFS {
 		
 		long[] cpuFreqs = cpu.getCPUFreqs();
 		
-		if(currentCPUFreqPosition == 0 && Q_currentFPS >= Q_targetFPS //If we are at lowest GPU freq and still above target FPS, don't bother
-				|| currentCPUFreqPosition == (cpuFreqs.length - 1) && Q_targetFPS >= Q_currentFPS){ //If we are at highest frequency and still below target FPS don't bother
-			return;
-			
-		}
-		
 		float UC_cpuUtil = cpu.getCPUUtilisation();
 		
 		Log.i(TAG, "CPU Util: " + UC_cpuUtil);
@@ -155,11 +149,6 @@ public class DVFS {
 		
 		long[] gpuFreqs = gpu.getGPUFreqs();
 		
-		if(currentGPUFreqPosition == 0 && Q_currentFPS >= Q_targetFPS //If we are at lowest GPU freq and still above target FPS, don't bother
-				|| currentGPUFreqPosition == (gpuFreqs.length - 1) && Q_targetFPS >= Q_currentFPS){ //If we are at highest frequency and still below target FPS don't bother
-			return;
-			
-		}
 		
 		float UG_gpuUtil = gpu.getGPUUtilisation();
 		Log.i(TAG, "GPU Util: " + UG_gpuUtil);
