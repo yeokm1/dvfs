@@ -112,16 +112,15 @@ public class GPUStuff {
 
 		//First line is not used
 		
-		int indexOfLastLine = output.length - 1;
 
-		String lastLine = output[indexOfLastLine];
+		String lastLine = output[output.length - 1];
 		String[] split = splitLine(lastLine);
 		String lastFrameFinishTimeStr = split[2];
 
 		double lastFrameFinishTime = Double.parseDouble(lastFrameFinishTimeStr);
 		int frameCount = 0;
 
-		for(int i = 1; i <= indexOfLastLine ; i++){
+		for(int i = 1; i <= 128 ; i++){
 			String[] splitted = splitLine(output[i]);
 			String thisFrameFinishTimeStr = splitted[2];
 			double thisFrameFirstTime = Double.parseDouble(thisFrameFinishTimeStr);
