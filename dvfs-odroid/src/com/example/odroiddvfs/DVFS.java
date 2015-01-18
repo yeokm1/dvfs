@@ -28,8 +28,6 @@ public class DVFS {
 
 	private int currentSlidingWindowPosition;
 
-	private int turnOnOtherCPUThreshold;
-	private int turnOffCPUthreshold;
 
 	public DVFS(){
 		io = new IOStuff();
@@ -40,13 +38,10 @@ public class DVFS {
 	}
 
 
-	public void start(int fpsLowbound, int fpsHighBound, int slidingWindowLength, int turnOnOtherCPUThreshold, int turnOffCPUThreshold){
+	public void start(int fpsLowbound, int fpsHighBound, int slidingWindowLength){
 		this.fpsLowBound = fpsLowbound;
 		this.fpsHighBound = fpsHighBound;
 		this.slidingWindowLength = slidingWindowLength;
-		this.turnOnOtherCPUThreshold = turnOnOtherCPUThreshold;
-		this.turnOffCPUthreshold = turnOffCPUThreshold;
-
 		currentSlidingWindowPosition = 0;
 
 		io.startShell();
