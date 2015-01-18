@@ -129,7 +129,13 @@ public class GPUStuff {
 			}
 
 		}
-		return frameCount;
+		
+		if(frameCount > 100){
+			return NO_FPS_CALCULATED;
+		} else {
+			return frameCount;
+		}
+
 	}
 
 	private String[] splitLine(String input){
