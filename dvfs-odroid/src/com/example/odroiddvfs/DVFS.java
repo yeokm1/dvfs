@@ -135,7 +135,9 @@ public class DVFS {
 		
 		long[] cpuFreqs = cpu.getCPUFreqs();
 		
-		double UC_cpuUtil = cpu.getCoreWithHighestUtilisation();
+		double[] coreUtils = cpu.getCPUCoresUtilisation();
+		
+		double UC_cpuUtil = cpu.getCoreWithHighestUtilisation(coreUtils);
 		
 		Log.i(TAG, "CPU Util: " + UC_cpuUtil);
 

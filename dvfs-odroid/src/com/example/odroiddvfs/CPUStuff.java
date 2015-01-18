@@ -11,6 +11,13 @@ public class CPUStuff {
 	public static final String FILE_CPU_SCALING_GOVERNER = "/sys/devices/system/cpu/cpu0/cpufreq/scaling_governor";
 	public static final String FILE_CPU_AVAILABLE_FREQS = "/sys/devices/system/cpu/cpufreq/iks-cpufreq/freq_table";
 	
+	public static final String[] FILE_CPU_CORE_ONLINE = {
+		"/sys/devices/system/cpu/cpu0/online",
+		"/sys/devices/system/cpu/cpu1/online",
+		"/sys/devices/system/cpu/cpu2/online", 
+		"/sys/devices/system/cpu/cpu3/online"
+	};
+	
 	private static final String FILE_CPU_UTIL = "/proc/stat";
 	
 	private static final int LOWEST_FREQ_POSITION = 7; //0.6 GHz
@@ -26,14 +33,28 @@ public class CPUStuff {
 	private String[] cpuFreqsString;
 	private int cpuFreqPosition;
 	
+	
+	private boolean[] coreOnlineStatus = new boolean[NUM_CORES];
+	
 	private IOStuff io;
 	
 	public CPUStuff(IOStuff io){
 		this.io = io;
 		cpuFreqsString = getCPUFreqStrings();
 		cpuFreqs = convertStringArrayToLong(cpuFreqsString);
+		initValues();
 		setGovernorToUserspace();
 		setCPUFreq(0); //Assume it is the lowest at the beginning
+		setCoreOnlineStatus(new boolean[]{true, true, true, true});
+		
+	}
+	
+	private void initValues(){
+		for(int i = 0; i < NUM_CORES; i++){
+			prevCoreLoad[i] = 0;
+			prevCoreTotal[i] = 0;
+			coreOnlineStatus[i] = false;
+		}
 	}
 	
 	public void setGovernorToUserspace(){
@@ -52,6 +73,25 @@ public class CPUStuff {
 		cpuFreqPosition = position;
 		String newFrequency = cpuFreqsString[position];
 		io.setThisValueToThisFile(newFrequency, FILE_CPU_SCALING_FREQ);
+	}
+	
+	public void setCoreOnlineStatus(boolean[] newOnlineStatus){
+		for(int coreNumber = 0; coreNumber < newOnlineStatus.length; coreNumber++){
+			boolean oldStatus = coreOnlineStatus[coreNumber];
+			boolean newStatus = newOnlineStatus[coreNumber];
+			
+			if(oldStatus != newStatus){
+				if(newStatus){
+					io.setThisValueToThisFile("1", FILE_CPU_CORE_ONLINE[coreNumber]);
+				} else {
+					io.setThisValueToThisFile("0", FILE_CPU_CORE_ONLINE[coreNumber]);
+				}
+
+			}
+		}
+		
+		coreOnlineStatus = newOnlineStatus;
+		
 	}
 	
 	public long[] getCPUFreqs(){
@@ -105,10 +145,8 @@ public class CPUStuff {
 	   return util;
 
 	}
-	
-	public double getCoreWithHighestUtilisation(){
-		double[] coreUtils = getCPUCoresUtilisation();
 		
+	public double getCoreWithHighestUtilisation(double[] coreUtils){		
 		double highestUtil = 0;
 		for(double util : coreUtils){
 			if(util > highestUtil){
@@ -126,8 +164,19 @@ public class CPUStuff {
 		int initialOffset = 11; //The initial offset is to skip the all cores fields
 		int subsequentOffset = 10;
 		
-		for(int i = 0; i < NUM_CORES; i++){
-			int start = initialOffset + (i * subsequentOffset);
+		int coreTokStartMultiplier = -1;
+		for(int coreNumber = 0; coreNumber < NUM_CORES; coreNumber++){
+			
+			boolean coreOnline = coreOnlineStatus[coreNumber];
+			
+			if(coreOnline){
+				coreTokStartMultiplier++;
+			} else {
+				util[coreNumber] = 0; 
+				continue;
+			}
+			
+			int start = initialOffset + (coreTokStartMultiplier * subsequentOffset);
 			
 			long user = Long.parseLong(toks[start + 1]);
 			long nice = Long.parseLong(toks[start + 2]);
@@ -140,10 +189,10 @@ public class CPUStuff {
 			long currentLoad = user + nice + system + iowait + irq + softirq;
 			long currentTotal = currentLoad + currentIdle;
 
-			util[i] = ((((double) (currentLoad - prevCoreLoad[i])) / (currentTotal - prevCoreTotal[i]))) * 100;
+			util[coreNumber] = ((((double) (currentLoad - prevCoreLoad[coreNumber])) / (currentTotal - prevCoreTotal[coreNumber]))) * 100;
 
-			prevCoreLoad[i] = currentLoad;
-			prevCoreTotal[i] = currentTotal;
+			prevCoreLoad[coreNumber] = currentLoad;
+			prevCoreTotal[coreNumber] = currentTotal;
 		}
 		
 		return util;
