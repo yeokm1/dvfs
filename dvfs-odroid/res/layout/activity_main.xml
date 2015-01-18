@@ -13,16 +13,6 @@
         android:onClick="stopButtonPress"
         android:text="Stop" />
 
-    <Button
-        android:id="@+id/button1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_marginBottom="176dp"
-        android:onClick="startButtonPress"
-        android:text="Start" />
-
     <EditText
         android:id="@+id/fpsLowBound"
         android:layout_width="wrap_content"
@@ -36,16 +26,6 @@
 
         <requestFocus />
     </EditText>
-
-    <TextView
-        android:id="@+id/textView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="31dp"
-        android:text="FPS Low Bound:"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
         android:id="@+id/textView2"
@@ -86,6 +66,69 @@
         android:layout_alignParentLeft="true"
         android:layout_alignTop="@+id/slidingWindow"
         android:text="Sliding Window (s):"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <Button
+        android:id="@+id/button1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginBottom="23dp"
+        android:onClick="startButtonPress"
+        android:text="Start" />
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="124dp"
+        android:text="FPS Low Bound:"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/slidingWindow"
+        android:layout_marginTop="23dp"
+        android:text="Turn on other CPU util(%):"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <EditText
+        android:id="@+id/turnOnOtherCPUUtil"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/textView4"
+        android:layout_alignBottom="@+id/textView4"
+        android:layout_alignParentRight="true"
+        android:layout_toRightOf="@+id/textView4"
+        android:ems="10"
+        android:inputType="number"
+        android:text="60" />
+
+    <EditText
+        android:id="@+id/turnOffCpuUtil"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/textView5"
+        android:layout_alignBottom="@+id/textView5"
+        android:layout_toRightOf="@+id/textView5"
+        android:ems="10"
+        android:inputType="number"
+        android:text="30" />
+
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/turnOnOtherCPUUtil"
+        android:layout_marginTop="16dp"
+        android:text="Turn off CPU Util(%):"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
 </RelativeLayout>

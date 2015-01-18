@@ -32,19 +32,26 @@ public class MainActivity extends Activity {
 		EditText fpsHighBoundView = (EditText) findViewById(R.id.fpsHighBound);
 		EditText slidingWindowView = (EditText) findViewById(R.id.slidingWindow);
 		
+		EditText turnOnCPUView = (EditText) findViewById(R.id.turnOnOtherCPUUtil);
+		EditText turnOffView = (EditText) findViewById(R.id.turnOffCpuUtil);
+		
+		
 		try{
 			int fpsLowBound = Integer.parseInt(fpsLowBoundView.getText().toString());
 			int fpsHighBound = Integer.parseInt(fpsHighBoundView.getText().toString());
 			int slidingWindow = Integer.parseInt(slidingWindowView.getText().toString());
+			
+			int turnOnCpuUtil = Integer.parseInt(turnOnCPUView.getText().toString());
+			int turnOffCpuUtil = Integer.parseInt(turnOffView.getText().toString());
 			
 			if(fpsLowBound <= 0 || fpsHighBound > 60
 					|| fpsHighBound < fpsLowBound
 					|| slidingWindow < 0){
 				throw new NumberFormatException();
 			}
-			dvfs.start(fpsLowBound,fpsHighBound, slidingWindow);
+			dvfs.start(fpsLowBound,fpsHighBound, slidingWindow, turnOnCpuUtil, turnOffCpuUtil);
 			
-			Toast.makeText(this, "Started, FPS Low: " + fpsLowBound + ", FPS High: " + fpsHighBound + ", Sliding Window: " + slidingWindow, Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, "Started, FPS Low: " + fpsLowBound + ", FPS High: " + fpsHighBound + ", Sliding Window: " + slidingWindow + ", Turn on Util: " + turnOnCpuUtil + ", Turn off Util: " + turnOffCpuUtil, Toast.LENGTH_LONG).show();
 		} catch (NumberFormatException e){
 			Toast.makeText(this, "Invalid Input", Toast.LENGTH_SHORT).show();
 		}

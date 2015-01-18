@@ -28,6 +28,9 @@ public class DVFS {
 
 	private int currentSlidingWindowPosition;
 
+	private int turnOnOtherCPUThreshold;
+	private int turnOffCPUthreshold;
+
 	public DVFS(){
 		io = new IOStuff();
 		io.startShell();
@@ -37,10 +40,13 @@ public class DVFS {
 	}
 
 
-	public void start(int fpsLowbound, int fpsHighBound, int slidingWindowLength){
+	public void start(int fpsLowbound, int fpsHighBound, int slidingWindowLength, int turnOnOtherCPUThreshold, int turnOffCPUThreshold){
 		this.fpsLowBound = fpsLowbound;
 		this.fpsHighBound = fpsHighBound;
 		this.slidingWindowLength = slidingWindowLength;
+		this.turnOnOtherCPUThreshold = turnOnOtherCPUThreshold;
+		this.turnOffCPUthreshold = turnOffCPUThreshold;
+
 		currentSlidingWindowPosition = 0;
 
 		io.startShell();
@@ -52,17 +58,18 @@ public class DVFS {
 		(new Runnable() {
 			public void run() {
 				int currentFPS = gpu.getFPS(TIME_INTERVAL_NANO_SECONDS);
-				
-				int newValueFPS = shouldPursueFPSRecalculationToThisFPS(currentFPS);
-				Log.i(TAG, "FPS: " + Integer.toString(currentFPS));
-				
 
-				if(newValueFPS == DO_NOT_PURSUE_FPS_VALUE){
-					processInputs(currentFPS, currentFPS, true);
-				} else {
-					processInputs(currentFPS, newValueFPS, false);
+				if(currentFPS != GPUStuff.NO_FPS_CALCULATED){
+					int newValueFPS = shouldPursueFPSRecalculationToThisFPS(currentFPS);
+					Log.i(TAG, "FPS: " + Integer.toString(currentFPS));
+
+					
+					if(newValueFPS == DO_NOT_PURSUE_FPS_VALUE){
+						processInputs(currentFPS, currentFPS, true);
+					} else {
+						processInputs(currentFPS, newValueFPS, false);
+					}
 				}
-
 
 
 
@@ -83,12 +90,8 @@ public class DVFS {
 
 		}
 	}
-	
-	private int shouldPursueFPSRecalculationToThisFPS(int fps){
-		if(fps == GPUStuff.NO_FPS_CALCULATED){
-			return DO_NOT_PURSUE_FPS_VALUE;
-		}
 
+	private int shouldPursueFPSRecalculationToThisFPS(int fps){
 		if(fps > fpsHighBound){
 			//We need to decrease FPS
 			return fpsLowBound;
@@ -104,50 +107,92 @@ public class DVFS {
 
 
 	private void processInputs(int currentFPS, int newFPSValue, boolean fpsInRange){
-		
+
 		Log.i(TAG, "Current FPS: " + Integer.toString(currentFPS) + ", target FPS " + Integer.toString(newFPSValue));
 
 		makeCPUMeetThisFPS(newFPSValue, currentFPS);
-		
+
 		if(fpsInRange){
 			return;
 		}
-		
+
 		Log.i(TAG, "Current FPS: " + Integer.toString(currentFPS) + ", target FPS " + Integer.toString(newFPSValue));
 
 		currentSlidingWindowPosition++;
 
 		if(currentSlidingWindowPosition > slidingWindowLength){
-			
+
 			currentSlidingWindowPosition = 0;
-			
+
 			makeGPUMeetThisFPS(newFPSValue, currentFPS);
 		}
-		
+
 
 	}
-	
-	
+
+
 	private void makeCPUMeetThisFPS(int Q_targetFPS, int Q_currentFPS){
 		Log.i(TAG, "CPU meet this FPS: " + Q_targetFPS);
-		
+
 		int currentCPUFreqPosition = cpu.getCpuFreqPosition();
-		
+
 		long[] cpuFreqs = cpu.getCPUFreqs();
-		
+
 		double[] coreUtils = cpu.getCPUCoresUtilisation();
-		
+
+//		Arrays.sort(coreUtils);
+//		ArrayUtils.reverse(coreUtils);
+//
+//		Log.i(TAG, "Core utils: " + coreUtils[0] + " " + coreUtils[1]  + " " + coreUtils[2]  + " " + coreUtils[3]);
+//
+//		int currentActiveCores = cpu.getNumCoresActive();
+//		int newActiveCores = currentActiveCores;
+//
+//		switch(currentActiveCores){
+//		case 1:
+//			if(coreUtils[0] > turnOnOtherCPUThreshold){
+//				newActiveCores = 2;
+//			}
+//			break;
+//		case 2:
+//			if((coreUtils[0] < turnOnOtherCPUThreshold) 
+//					&& (coreUtils[1] < turnOffCPUthreshold)){
+//				newActiveCores = 1;
+//			} else if(coreUtils[1] > turnOnOtherCPUThreshold){
+//				newActiveCores = 3;	
+//			}
+//			break;
+//		case 3:
+//			if((coreUtils[1] < turnOnOtherCPUThreshold) 
+//					&& (coreUtils[2] < turnOffCPUthreshold)){
+//				newActiveCores = 2;
+//			} else if(coreUtils[2] > turnOnOtherCPUThreshold){
+//				newActiveCores = 4;	
+//			}
+//
+//			break;
+//		case 4:
+//			if((coreUtils[2] < turnOnOtherCPUThreshold) 
+//					&& (coreUtils[3] < turnOffCPUthreshold)){
+//				newActiveCores = 3;
+//			}
+//			break;
+//		default:
+//			Log.e(TAG, "should never reach here. Must have between 1-4 cores active");
+//		}
+//
+//		cpu.setCoreOnlineStatus(newActiveCores);
+
+
 		double UC_cpuUtil = cpu.getCoreWithHighestUtilisation(coreUtils);
-		
-		Log.i(TAG, "CPU Util: " + UC_cpuUtil);
 
 		long c_currentCPUFreq = cpu.getCurrentCPUFrequency();	
 
 		double PC_priceCPU = (UC_cpuUtil * c_currentCPUFreq) / Q_currentFPS;
 		double OC_expectedCPUCost = PC_priceCPU * Q_targetFPS;
-		
+
 		double targetCPUUtil;
-		
+
 		if(UC_cpuUtil > TARGET_CPU_UTILISATION){
 			targetCPUUtil = UC_cpuUtil;
 		} else {
@@ -167,15 +212,11 @@ public class DVFS {
 
 	private void makeGPUMeetThisFPS(int Q_targetFPS, int Q_currentFPS){
 		Log.i(TAG, "GPU meet this FPS: " + Q_targetFPS);
-		
+
 		int currentGPUFreqPosition = gpu.getGpuFreqPosition();
-		
+
 		long[] gpuFreqs = gpu.getGPUFreqs();
-		
-		
-		//float UG_gpuUtil = gpu.getGPUUtilisation();
-		//Log.i(TAG, "GPU Util: " + UG_gpuUtil);
-		
+
 		long g_currentGPUFreq = gpu.getCurrentGPUFrequency();
 
 		double PG_priceGPU = (g_currentGPUFreq) / (double) Q_currentFPS;

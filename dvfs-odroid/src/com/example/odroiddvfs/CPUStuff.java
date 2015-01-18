@@ -35,6 +35,7 @@ public class CPUStuff {
 	
 	
 	private boolean[] coreOnlineStatus = new boolean[NUM_CORES];
+	private int coresActive = 0;
 	
 	private IOStuff io;
 	
@@ -45,7 +46,7 @@ public class CPUStuff {
 		initValues();
 		setGovernorToUserspace();
 		setCPUFreq(0); //Assume it is the lowest at the beginning
-		setCoreOnlineStatus(new boolean[]{true, true, true, true});
+//		setCoreOnlineStatus(1);
 		
 	}
 	
@@ -53,12 +54,17 @@ public class CPUStuff {
 		for(int i = 0; i < NUM_CORES; i++){
 			prevCoreLoad[i] = 0;
 			prevCoreTotal[i] = 0;
-			coreOnlineStatus[i] = false;
+			coreOnlineStatus[i] = true;
+			coresActive++;
 		}
 	}
 	
 	public void setGovernorToUserspace(){
 		io.setThisValueToThisFile("userspace", FILE_CPU_SCALING_GOVERNER);
+	}
+	
+	public int getNumCoresActive(){
+		return coresActive;
 	}
 	
 	public long getCurrentCPUFrequency(){
@@ -75,24 +81,30 @@ public class CPUStuff {
 		io.setThisValueToThisFile(newFrequency, FILE_CPU_SCALING_FREQ);
 	}
 	
-	public void setCoreOnlineStatus(boolean[] newOnlineStatus){
-		for(int coreNumber = 0; coreNumber < newOnlineStatus.length; coreNumber++){
-			boolean oldStatus = coreOnlineStatus[coreNumber];
-			boolean newStatus = newOnlineStatus[coreNumber];
-			
-			if(oldStatus != newStatus){
-				if(newStatus){
-					io.setThisValueToThisFile("1", FILE_CPU_CORE_ONLINE[coreNumber]);
-				} else {
-					io.setThisValueToThisFile("0", FILE_CPU_CORE_ONLINE[coreNumber]);
-				}
-
-			}
-		}
-		
-		coreOnlineStatus = newOnlineStatus;
-		
-	}
+	
+//	public void setCoreOnlineStatus(int newActiveCores){
+//		
+//		
+//		for(int coreNumber = 0; coreNumber < NUM_CORES; coreNumber++){
+//			boolean oldStatus = coreOnlineStatus[coreNumber];
+//			boolean newStatus = coreNumber < newActiveCores ? true : false; 
+//			
+//			if(oldStatus != newStatus){
+//				if(newStatus){
+//					io.setThisValueToThisFile("1", FILE_CPU_CORE_ONLINE[coreNumber]);
+//				} else {
+//					io.setThisValueToThisFile("0", FILE_CPU_CORE_ONLINE[coreNumber]);
+//				}
+//
+//			}
+//			
+//			coreOnlineStatus[coreNumber] = newStatus;
+//			
+//		}
+//		
+//		coresActive = newActiveCores;
+//				
+//	}
 	
 	public long[] getCPUFreqs(){
 		return cpuFreqs;
