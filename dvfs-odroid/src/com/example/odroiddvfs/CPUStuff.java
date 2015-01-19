@@ -33,9 +33,7 @@ public class CPUStuff {
 	private String[] cpuFreqsString;
 	private int cpuFreqPosition;
 	
-	
-	private boolean[] coreOnlineStatus = new boolean[NUM_CORES];
-	
+
 	private IOStuff io;
 	
 	public CPUStuff(IOStuff io){
@@ -45,14 +43,12 @@ public class CPUStuff {
 		initValues();
 		setGovernorToUserspace();
 		setCPUFreq(0); //Assume it is the lowest at the beginning	
-		setCoreOnlineStatus(new boolean[]{true, true, false, false});
 	}
 	
 	private void initValues(){
 		for(int i = 0; i < NUM_CORES; i++){
 			prevCoreLoad[i] = 0;
 			prevCoreTotal[i] = 0;
-			setCoreOnlineStatus(new boolean[]{false, false, true, true});
 		}
 	}
 	
@@ -75,31 +71,6 @@ public class CPUStuff {
 		io.setThisValueToThisFile(newFrequency, FILE_CPU_SCALING_FREQ);
 	}
 	
-	public boolean[] getCurrentCoreOnlineStatus(){
-		return coreOnlineStatus;
-	}
-
-	
-	public void setCoreOnlineStatus(boolean[] newCoreStatus){
-		
-		
-		for(int coreNumber = 0; coreNumber < NUM_CORES; coreNumber++){
-			boolean oldStatus = coreOnlineStatus[coreNumber];
-			boolean newStatus = newCoreStatus[coreNumber];
-			
-			if(oldStatus != newStatus){
-				if(newStatus){
-					io.setThisValueToThisFile("1", FILE_CPU_CORE_ONLINE[coreNumber]);
-				} else {
-					io.setThisValueToThisFile("0", FILE_CPU_CORE_ONLINE[coreNumber]);
-				}
-
-			}
-			
-			coreOnlineStatus[coreNumber] = newStatus;
-			
-		}				
-	}
 	
 	public long[] getCPUFreqs(){
 		return cpuFreqs;
@@ -171,19 +142,9 @@ public class CPUStuff {
 		int initialOffset = 11; //The initial offset is to skip the all cores fields
 		int subsequentOffset = 10;
 		
-		int coreTokStartMultiplier = -1;
 		for(int coreNumber = 0; coreNumber < NUM_CORES; coreNumber++){
-			
-			boolean coreOnline = coreOnlineStatus[coreNumber];
-			
-			if(coreOnline){
-				coreTokStartMultiplier++;
-			} else {
-				util[coreNumber] = 0; 
-				continue;
-			}
-			
-			int start = initialOffset + (coreTokStartMultiplier * subsequentOffset);
+									
+			int start = initialOffset + (coreNumber * subsequentOffset);
 			
 			long user = Long.parseLong(toks[start + 1]);
 			long nice = Long.parseLong(toks[start + 2]);

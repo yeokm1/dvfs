@@ -11,9 +11,6 @@ public class DVFS {
 	private static final int DVFS_UPDATE_RATE = 1000;
 
 	private static final float TARGET_CPU_UTILISATION = 80;
-	
-	private static final float CPU_ON_UTIL = 70;
-	private static final float CPU_OFF_UTIL = 40;
 
 	public static final String TAG = "DVFS";
 
@@ -138,34 +135,7 @@ public class DVFS {
 
 		double[] coreUtils = cpu.getCPUCoresUtilisation();
 		Log.i(TAG, "CPU Util: " + coreUtils[0] + " " + coreUtils[1] + " " + coreUtils[2] + " " + coreUtils[3]);
-		
-		boolean[] coreOnlineStatus = cpu.getCurrentCoreOnlineStatus();
-		
-		boolean[] newCoreOnlineStatus = new boolean[]{true, true, false, false};
-		
-		for(int coreNumber = 2; coreNumber < coreUtils.length; coreNumber++){
-			
-			boolean currentCoreStatus = coreOnlineStatus[coreNumber];
-			double parentCPUUtil = coreUtils[coreNumber - 2];
-			
-			boolean newCoreStatus = coreOnlineStatus[coreNumber];
-			
-			if(currentCoreStatus){
-				double currentUtil = coreUtils[coreNumber];
-				if(currentUtil < CPU_OFF_UTIL && parentCPUUtil < CPU_ON_UTIL){
-					newCoreStatus = false;
-				}
-			} else {
-				if(parentCPUUtil > CPU_ON_UTIL){
-					newCoreStatus = true;
-				}
-			}
-			
-			newCoreOnlineStatus[coreNumber] = newCoreStatus;
-		}
-		
-		cpu.setCoreOnlineStatus(newCoreOnlineStatus);
-
+	
 
 		double UC_cpuUtil = cpu.getCoreWithHighestUtilisation(coreUtils);
 
