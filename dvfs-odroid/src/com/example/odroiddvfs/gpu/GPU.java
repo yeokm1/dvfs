@@ -9,7 +9,7 @@ public abstract class GPU {
 	public static final int NO_FPS_CALCULATED = -1;
 	protected static final String FPS_COMMAND = "dumpsys SurfaceFlinger --latency SurfaceView\n";
 	
-	
+	protected int FPS_LINES;
 	
 	
 	protected long[] gpuFreqs;
@@ -24,9 +24,10 @@ public abstract class GPU {
 		this.io = io;
 		gpuFreqsString = getGPUFreqStrings();
 		gpuFreqs = convertStringArrayToLong(gpuFreqsString);
+		FPS_LINES = getFPSLines();
 		setGPUFreq(0);
 	}
-	
+		
 	public long[] getGPUFreqs(){
 		return gpuFreqs;
 	}
@@ -44,6 +45,8 @@ public abstract class GPU {
 	public abstract void setGPUFreq(int position);
 	
 	public abstract float getGPUUtilisation();
+	
+	protected abstract int getFPSLines();
 	
 	
 	/* 
@@ -82,7 +85,7 @@ public abstract class GPU {
 		double lastFrameFinishTime = Double.parseDouble(lastFrameFinishTimeStr);
 		int frameCount = 0;
 
-		for(int i = 1; i <= 128 ; i++){
+		for(int i = 1; i <= FPS_LINES ; i++){
 			String[] splitted = splitLine(output[i]);
 			String thisFrameFinishTimeStr = splitted[2];
 			double thisFrameFirstTime = Double.parseDouble(thisFrameFinishTimeStr);
@@ -92,7 +95,7 @@ public abstract class GPU {
 
 		}
 		
-		if(frameCount > 100){
+		if(frameCount > 100 || frameCount == 1){
 			return NO_FPS_CALCULATED;
 		} else {
 			return frameCount;

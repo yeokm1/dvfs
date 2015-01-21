@@ -51,6 +51,11 @@ public class GPUOdroid extends GPU{
 		}
 		return numOutput;
 	}
+
+	@Override
+	protected int getFPSLines() {
+		return 128;
+	}
 	
 	
 

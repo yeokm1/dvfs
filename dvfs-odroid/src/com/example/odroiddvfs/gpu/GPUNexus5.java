@@ -39,4 +39,9 @@ public class GPUNexus5 extends GPU{
 		return 100;
 	}
 
+	@Override
+	protected int getFPSLines() {
+		return 127;
+	}
+
 }
