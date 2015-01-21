@@ -6,6 +6,10 @@ import java.util.concurrent.TimeUnit;
 
 import android.util.Log;
 
+import com.example.odroiddvfs.gpu.GPU;
+
+import cpu.CPU;
+
 public class DVFS {
 
 	private static final int DVFS_UPDATE_RATE = 1000;
@@ -15,8 +19,8 @@ public class DVFS {
 	public static final String TAG = "DVFS";
 
 	private IOStuff io;
-	private CPUStuff cpu;
-	private GPUStuff gpu;
+	private CPU cpu;
+	private GPU gpu;
 
 	private ScheduledExecutorService scheduler;
 	public static final float TIME_INTERVAL_NANO_SECONDS = 1000000000;
@@ -32,8 +36,8 @@ public class DVFS {
 	public DVFS(){
 		io = new IOStuff();
 		io.startShell();
-		cpu = new CPUStuff(io);
-		gpu = new GPUStuff(io);
+		cpu = Factory.getCPUObject(io);
+		gpu = Factory.getGPUObject(io);
 		io.stopShell();
 	}
 
@@ -54,7 +58,7 @@ public class DVFS {
 			public void run() {
 				int currentFPS = gpu.getFPS(TIME_INTERVAL_NANO_SECONDS);
 
-				if(currentFPS != GPUStuff.NO_FPS_CALCULATED){
+				if(currentFPS != GPU.NO_FPS_CALCULATED){
 					int newValueFPS = shouldPursueFPSRecalculationToThisFPS(currentFPS);
 					Log.i(TAG, "FPS: " + Integer.toString(currentFPS));
 
