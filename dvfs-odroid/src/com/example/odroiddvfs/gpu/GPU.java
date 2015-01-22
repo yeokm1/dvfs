@@ -95,7 +95,7 @@ public abstract class GPU {
 
 		}
 		
-		if(frameCount > 100 || frameCount == 1){
+		if(frameCount > 100 || frameCount <= 3){
 			return NO_FPS_CALCULATED;
 		} else {
 			return frameCount;

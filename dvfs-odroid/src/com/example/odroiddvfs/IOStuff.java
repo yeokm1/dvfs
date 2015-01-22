@@ -164,7 +164,7 @@ public class IOStuff {
 
 	}
 	
-	private String runAndGetStaticCommandOutput(String command){
+	public String runAndGetStaticCommandOutput(String command){
 		Log.d("TAG", "Run Command: " + command);
 		try {
 			Process process = Runtime.getRuntime().exec(command);

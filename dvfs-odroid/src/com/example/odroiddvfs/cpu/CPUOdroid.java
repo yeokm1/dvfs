@@ -32,6 +32,13 @@ public class CPUOdroid extends CPU{
 		String[] selectedFreqs = Arrays.copyOfRange(givenFreqs, LOWEST_FREQ_POSITION, HIGHEST_FREQ_POSITION);
 		return selectedFreqs;
 	}
+
+
+	@Override
+	protected void priorToSetGovernorToUserspace() {
+		//Nothing
+		
+	}
 	
 
 
