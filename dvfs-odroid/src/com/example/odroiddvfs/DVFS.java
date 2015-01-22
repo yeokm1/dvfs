@@ -6,9 +6,8 @@ import java.util.concurrent.TimeUnit;
 
 import android.util.Log;
 
+import com.example.odroiddvfs.cpu.CPU;
 import com.example.odroiddvfs.gpu.GPU;
-
-import cpu.CPU;
 
 public class DVFS {
 

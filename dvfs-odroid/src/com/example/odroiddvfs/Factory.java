@@ -1,13 +1,13 @@
 package com.example.odroiddvfs;
 
+import com.example.odroiddvfs.cpu.CPU;
+import com.example.odroiddvfs.cpu.CPUNexus5;
+import com.example.odroiddvfs.cpu.CPUOdroid;
 import com.example.odroiddvfs.gpu.GPU;
 import com.example.odroiddvfs.gpu.GPUNexus5;
 import com.example.odroiddvfs.gpu.GPUOdroid;
 
 import android.os.Build;
-import cpu.CPU;
-import cpu.CPUNexus5;
-import cpu.CPUOdroid;
 
 public class Factory {
 

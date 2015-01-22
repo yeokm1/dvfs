@@ -1,4 +1,4 @@
-package cpu;
+package com.example.odroiddvfs.cpu;
 
 import com.example.odroiddvfs.IOStuff;
 
