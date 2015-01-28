@@ -16,7 +16,7 @@ public:
 	IOStuff();
 	virtual ~IOStuff();
 	void writeValueToFile(const char * filename, float value);
-	float getValueToFile(const char * filename);
+	float getValueFromFile(const char * filename);
 };
 
 #endif /* IOSTUFF_H_ */

@@ -27,7 +27,7 @@ void IOStuff::writeValueToFile(const char * filePath, float value){
     fclose (filePtr);
 }
 
-float IOStuff::getValueToFile(const char * filename){
+float IOStuff::getValueFromFile(const char * filename){
     float  result;
     char newLine[TEXT_BUFFER_SIZE];
     FILE   *filePtr = fopen(filename, "r");
