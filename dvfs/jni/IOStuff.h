@@ -7,16 +7,9 @@
  */
 
 #ifndef IOSTUFF_H_
-
-
 #define IOSTUFF_H_
 
-class IOStuff {
-public:
-	IOStuff();
-	virtual ~IOStuff();
-	void writeValueToFile(const char * filename, float value);
-	float getValueFromFile(const char * filename);
-};
+void writeValueToFile(const char * filename, float value);
+float getValueFromFile(const char * filename);
 
 #endif /* IOSTUFF_H_ */
