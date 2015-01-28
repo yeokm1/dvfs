@@ -12,6 +12,7 @@
 # Generated files
 bin/
 gen/
+dvfs/obj
 
 # Gradle files
 .gradle/
@@ -25,3 +26,5 @@ proguard/
 
 # Log Files
 *.log
+
+*.so
