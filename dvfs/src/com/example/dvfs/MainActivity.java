@@ -1,4 +1,6 @@
-package com.example.odroiddvfs;
+package com.example.dvfs;
+
+import com.example.odroiddvfs.R;
 
 import android.app.Activity;
 import android.os.Bundle;

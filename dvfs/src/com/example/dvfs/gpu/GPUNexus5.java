@@ -1,9 +1,9 @@
-package com.example.odroiddvfs.gpu;
+package com.example.dvfs.gpu;
 
 import java.util.Arrays;
 import java.util.Collections;
 
-import com.example.odroiddvfs.IOStuff;
+import com.example.dvfs.IOStuff;
 
 public class GPUNexus5 extends GPU{
 	

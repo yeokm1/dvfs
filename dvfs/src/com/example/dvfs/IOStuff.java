@@ -1,4 +1,4 @@
-package com.example.odroiddvfs;
+package com.example.dvfs;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;

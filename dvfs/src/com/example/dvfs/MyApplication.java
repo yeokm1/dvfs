@@ -1,4 +1,4 @@
-package com.example.odroiddvfs;
+package com.example.dvfs;
 
 import android.app.Application;
 import android.content.Intent;

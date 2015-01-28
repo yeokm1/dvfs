@@ -1,6 +1,6 @@
-package com.example.odroiddvfs.gpu;
+package com.example.dvfs.gpu;
 
-import com.example.odroiddvfs.IOStuff;
+import com.example.dvfs.IOStuff;
 
 public abstract class GPU {
 	

@@ -1,4 +1,4 @@
-package com.example.odroiddvfs;
+package com.example.dvfs;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -6,8 +6,8 @@ import java.util.concurrent.TimeUnit;
 
 import android.util.Log;
 
-import com.example.odroiddvfs.cpu.CPU;
-import com.example.odroiddvfs.gpu.GPU;
+import com.example.dvfs.cpu.CPU;
+import com.example.dvfs.gpu.GPU;
 
 public class DVFS {
 

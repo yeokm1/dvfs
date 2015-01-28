@@ -1,9 +1,9 @@
-package com.example.odroiddvfs.cpu;
+package com.example.dvfs.cpu;
 
 import java.util.Arrays;
 import java.util.Collections;
 
-import com.example.odroiddvfs.IOStuff;
+import com.example.dvfs.IOStuff;
 
 public class CPUOdroid extends CPU{
 	

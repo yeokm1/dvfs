@@ -1,6 +1,6 @@
-package com.example.odroiddvfs.cpu;
+package com.example.dvfs.cpu;
 
-import com.example.odroiddvfs.IOStuff;
+import com.example.dvfs.IOStuff;
 
 public abstract class CPU {
 	private static final String FILE_CPU_UTIL = "/proc/stat";
