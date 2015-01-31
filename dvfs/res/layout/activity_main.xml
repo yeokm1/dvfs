@@ -24,7 +24,7 @@
         android:inputType="number"
         android:text="30" >
 
-        <requestFocus />
+        <requestFocus android:layout_width="match_parent" />
     </EditText>
 
     <TextView
@@ -87,5 +87,38 @@
         android:layout_marginTop="124dp"
         android:text="FPS Low Bound:"
         android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/slidingWindow"
+        android:text="Language:"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <RadioGroup
+        android:id="@+id/language_radiogroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/textView4"
+        android:layout_marginLeft="26dp"
+        android:layout_toRightOf="@+id/textView4"
+        android:orientation="horizontal" >
+
+        <RadioButton
+            android:id="@+id/language_java"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="Java" />
+
+        <RadioButton
+            android:id="@+id/language_ndk"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="false"
+            android:text="NDK" />
+    </RadioGroup>
 
 </RelativeLayout>

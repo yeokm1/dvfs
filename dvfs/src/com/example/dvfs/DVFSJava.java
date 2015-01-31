@@ -9,7 +9,7 @@ import android.util.Log;
 import com.example.dvfs.cpu.CPU;
 import com.example.dvfs.gpu.GPU;
 
-public class DVFS {
+public class DVFSJava implements DVFS{
 
 	private static final int DVFS_UPDATE_RATE = 1000;
 
@@ -32,7 +32,7 @@ public class DVFS {
 	private int currentSlidingWindowPosition;
 
 
-	public DVFS(){
+	public DVFSJava(){
 		io = new IOStuff();
 		io.startShell();
 		cpu = Factory.getCPUObject(io);

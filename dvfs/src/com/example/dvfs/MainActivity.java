@@ -6,31 +6,42 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.Toast;
 
 
 public class MainActivity extends Activity {
 
 	public static final String TAG = "MainActivity";
-	private DVFS dvfs;
 	
+	public DVFS dvfs;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		
-		dvfs = new DVFS();
 	}
 
 	public void startButtonPress(View view){
 		
+		if(dvfs != null){
+			dvfs.stop();
+		}
 		
-		
+
 
 		EditText fpsLowBoundView = (EditText) findViewById(R.id.fpsLowBound);
 		EditText fpsHighBoundView = (EditText) findViewById(R.id.fpsHighBound);
 		EditText slidingWindowView = (EditText) findViewById(R.id.slidingWindow);
+		RadioButton javaButton = (RadioButton) findViewById(R.id.language_java);
+		
+		if(javaButton.isChecked()){
+			dvfs = new DVFSJava();
+		} else {
+			dvfs = new DVFSNdk();
+		}
+		
+
 		
 		
 		try{
@@ -58,7 +69,10 @@ public class MainActivity extends Activity {
 
 	public void stopButtonPress(View view){
 		Toast.makeText(this, "Stopped", Toast.LENGTH_SHORT).show();
-		dvfs.stop();
+		if(dvfs != null){
+			dvfs.stop();
+			dvfs = null;
+		}
 	}
 
 
