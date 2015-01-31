@@ -4,8 +4,9 @@
 #include <unistd.h>
 #include <pthread.h>
 #include <android/log.h>
+#include "cpu/CPUOdroid.h"
 
-#define APPNAME "DVFS-ndk"
+#define CLASSNAME "DVFS-ndk"
 
 
 int fpsLowbound;
@@ -20,14 +21,14 @@ void * threadFunction(void *arg);
 extern "C"
 JNIEXPORT void JNICALL
 Java_com_example_dvfs_DVFSNdk_startDVFS( JNIEnv* env, jobject thiz, jint fpsLowbound, jint fpsHighBound, jint slidingWindowLength, jboolean isPhoneNexus5){
-	__android_log_print(ANDROID_LOG_VERBOSE, APPNAME, "lowbound: %d, highbound: %d, slidingWindow: %d, isPhoneNexus5: %d",  fpsLowbound,  fpsHighBound, slidingWindowLength, isPhoneNexus5);
+	__android_log_print(ANDROID_LOG_INFO, CLASSNAME, "lowbound: %d, highbound: %d, slidingWindow: %d, isPhoneNexus5: %d",  fpsLowbound,  fpsHighBound, slidingWindowLength, isPhoneNexus5);
 	startDVFS(fpsLowbound, fpsHighBound, slidingWindowLength,  isPhoneNexus5);
 }
 
 extern "C"
 JNIEXPORT void JNICALL
 Java_com_example_dvfs_DVFSNdk_stopDVFS( JNIEnv* env, jobject thiz ){
-	__android_log_print(ANDROID_LOG_VERBOSE, APPNAME, "Stop DVFS");
+	__android_log_print(ANDROID_LOG_INFO, CLASSNAME, "Stop DVFS");
 	dvfsInProgress = false;
 }
 
@@ -38,10 +39,7 @@ void startDVFS(int _fpsLowBound, int _fpsHighBound, int _slidingWindowLength, bo
 	fpsLowbound = _fpsLowBound;
 	fpsHighBound = _fpsHighBound;
 	slidingWindowLength = _slidingWindowLength;
-
-	//cpu = CPUOdroid();
 	dvfsInProgress = true;
-
 	pthread_create(&threadTask, NULL, threadFunction, NULL);
 
 
@@ -49,11 +47,21 @@ void startDVFS(int _fpsLowBound, int _fpsHighBound, int _slidingWindowLength, bo
 
 void * threadFunction(void *arg){
 
+	CPUOdroid cpu;
+
+
+
 	while(dvfsInProgress){
-		__android_log_print(ANDROID_LOG_VERBOSE, APPNAME, "Thread regular");
+		__android_log_print(ANDROID_LOG_INFO, CLASSNAME, "Thread regular");
 		sleep(1);
 	}
+
+
+	return NULL;
+
 }
+
+
 
 
 

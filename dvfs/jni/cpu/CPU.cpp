@@ -4,25 +4,23 @@
  *  Created on: 28 Jan, 2015
  *      Author: yeokm1
  */
+#include <stdlib.h>
+#include <android/log.h>
+#include "CPU.h"
+#include "IOStuff.c"
 
-#include <cpu/CPU.h>
-#include "IOStuff.h"
+
+
+#define CLASSNAME "CPU"
+#define USERSPACE "userspace"
 
 CPU::CPU() {
-
-	prevCoreLoad = new double[NUM_CORES];
-	prevCoreTotal = new double[NUM_CORES];
+	__android_log_print(ANDROID_LOG_INFO, CLASSNAME, "CPU Start");
 
 	for(int i = 0; i < NUM_CORES; i++){
 		prevCoreLoad[i] = 0;
 		prevCoreTotal[i] = 0;
 	}
-
-	initCPUFreqs();
-
-	priorToSetGovernorToUserspace();
-	setGovernorToUserspace();
-	setCPUFreq(0);
 }
 
 CPU::~CPU() {
@@ -46,6 +44,6 @@ void CPU::setCPUFreq(int position){
 }
 
 void CPU::setGovernorToUserspace(){
-	writeStringToFile(FILE_CPU_SCALING_GOVERNER, "userspace");
+	writeStringToFile(FILE_CPU_SCALING_GOVERNER, USERSPACE);
 }
 

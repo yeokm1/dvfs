@@ -6,17 +6,27 @@
  */
 
 #include <cstdlib>
-#include <cpu/CPUOdroid.h>
+#include <android/log.h>
+#include "CPUOdroid.h"
+#include "IOStuff.h"
 
 #define FILE_CPU_AVAILABLE_FREQS "/sys/devices/system/cpu/cpufreq/iks-cpufreq/freq_table"
 #define LOWEST_FREQ_POSITION 7 //0.6 GHz
 #define HIGHEST_FREQ_POSITION 17 //1.6 GHz
 
-CPUOdroid::CPUOdroid() {
+#define CLASSNAME "CPUOdroid"
+
+CPUOdroid::CPUOdroid(){
 	CPU();
+	__android_log_print(ANDROID_LOG_INFO, CLASSNAME, "CPU Start");
+
+	initCPUFreqValues();
+	setGovernorToUserspace();
+	afterSetGovernorToUserspace();
+	setCPUFreq(0);
 }
 
-CPUOdroid::~CPUOdroid() {
+CPUOdroid::~CPUOdroid(){
 }
 
 void CPUOdroid::initCPUFreqValues(){
@@ -40,12 +50,12 @@ void CPUOdroid::initCPUFreqValues(){
 
 	   freqString = strtok (NULL, " ");
 	   currentFreq = atol(freqString);
-	   cpuFreqs = realloc (cpuFreqs, numCPUFreqs * sizeof(int));
+	   realloc (cpuFreqs, numCPUFreqs * sizeof(int));
 	   cpuFreqs[numCPUFreqs - 1] = currentFreq;
 	 }
 
 
-	 free(freeLongString);
+	 free(freqLongString);
 
 }
 

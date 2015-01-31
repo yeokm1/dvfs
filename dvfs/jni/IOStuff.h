@@ -7,11 +7,17 @@
  */
 
 #ifndef IOSTUFF_H_
+
 #define IOSTUFF_H_
 
-void writeStringToFile(const char * filename, char * value);
-void writeValueToFile(const char * filename, float value);
-float getValueFromFile(const char * filename);
-char * getStringFromFile(const char * filename);
+void writeStringToFile(char * filename, char * value);
+void writeValueToFile(char * filename, float value);
+float getValueFromFile(char * filename);
+char * getStringFromFile(char * filename);
+
+
+
 
 #endif /* IOSTUFF_H_ */
+
+

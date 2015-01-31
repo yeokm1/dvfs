@@ -6,8 +6,9 @@
  */
 
 #ifndef CPU_CPUODROID_H_
-#include "CPU.h"
 #define CPU_CPUODROID_H_
+
+#include "CPU.h"
 
 class CPUOdroid : CPU{
 public:
@@ -16,7 +17,7 @@ public:
 
 private:
 	void initCPUFreqValues();
-	void priorToSetGovernorToUserspace(){
+	void afterSetGovernorToUserspace(){
 		//Do nothing
 	};
 };

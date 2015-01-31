@@ -7,6 +7,7 @@
 
 
 #ifndef CPU_CPU_H_
+#define CPU_CPU_H_
 
 #include <cstring>
 #define CPU_CPU_H_
@@ -24,18 +25,19 @@ public:
 	long * getCPUFreqs();
 	int getNumCPUFreqs();
 
-private:
-	double prevCoreLoad[];
-	double prevCoreTotal[];
+protected:
+	double prevCoreLoad[NUM_CORES];
+	double prevCoreTotal[NUM_CORES];
 	long * cpuFreqs = NULL;
 	int cpuFreqPosition;
 	int numCPUFreqs;
 
 	void initCPUFreqs();
 	void setGovernorToUserspace();
-	virtual void initCPUFreqValues();
-	virtual void priorToSetGovernorToUserspace();
+	void initCPUFreqValues();
+	void afterSetGovernorToUserspace();
 };
+
 
 
 #endif /* CPU_CPU_H_ */

@@ -1,23 +1,23 @@
-#include <IOStuff.h>
 #include <stdio.h>
-#include <cstdlib>
+#include <stdlib.h>
+
 
 #define TEXT_BUFFER_SIZE 20
 
 
-void writeStringToFile(const char * filePath, char * value){
+void writeStringToFile(char * filePath, char * value){
     FILE * filePtr = fopen(filePath, "w");
     fputs(value, filePtr);
     fclose (filePtr);
 }
 
-void writeValueToFile(const char * filePath, float value){
+void writeValueToFile(char * filePath, float value){
     FILE * filePtr = fopen(filePath, "w");
     fprintf(filePtr, "%f", value);
     fclose (filePtr);
 }
 
-float getValueFromFile(const char * filename){
+float getValueFromFile(char * filename){
     float  result;
     char newLine[TEXT_BUFFER_SIZE];
     FILE   *filePtr = fopen(filename, "r");
@@ -29,7 +29,7 @@ float getValueFromFile(const char * filename){
     return result;
 }
 
-char * getStringFromFile(const char * filename){
+char * getStringFromFile(char * filename){
 	FILE *fp =  fopen (filename , "r");
 	fseek( fp , 0L , SEEK_END);
 	long fileSize = ftell( fp );
@@ -37,7 +37,7 @@ char * getStringFromFile(const char * filename){
 	rewind(fp);
 
 	//+1 for null character
-	char *buffer = calloc(buffSize, sizeof(char));
+	char *buffer = (char*) calloc(buffSize, sizeof(char));
 	fgets(buffer, buffSize, fp);
 	fclose(fp);
 
