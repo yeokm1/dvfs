@@ -48,7 +48,7 @@ void CPUOdroid::initCPUFreqValues(){
     cpuFreqs.clear();
     cpuFreqs.push_back(currentFreq);
 
-	while ((freqString = strtok (NULL, " "))!= NULL){
+	while ((freqString = strtok (NULL, " ")) != NULL){
 		__android_log_print(ANDROID_LOG_INFO, CLASSNAME, "Frequencies available: %s", freqString);
 	   currentFreq = atol(freqString);
 	   cpuFreqs.push_back(currentFreq);
