@@ -110,14 +110,14 @@
             android:id="@+id/language_java"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:checked="true"
+            android:checked="false"
             android:text="Java" />
 
         <RadioButton
             android:id="@+id/language_ndk"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:checked="false"
+            android:checked="true"
             android:text="NDK" />
     </RadioGroup>
 

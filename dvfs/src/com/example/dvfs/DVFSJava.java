@@ -41,8 +41,8 @@ public class DVFSJava implements DVFS{
 	}
 
 
-	public void start(int fpsLowbound, int fpsHighBound, int slidingWindowLength){
-		this.fpsLowBound = fpsLowbound;
+	public void start(int fpsLowBound, int fpsHighBound, int slidingWindowLength){
+		this.fpsLowBound = fpsLowBound;
 		this.fpsHighBound = fpsHighBound;
 		this.slidingWindowLength = slidingWindowLength;
 		currentSlidingWindowPosition = 0;
