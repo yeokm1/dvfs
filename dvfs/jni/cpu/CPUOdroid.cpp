@@ -5,6 +5,7 @@
  *      Author: yeokm1
  */
 
+#include <cstdlib>
 #include <cpu/CPUOdroid.h>
 
 #define FILE_CPU_AVAILABLE_FREQS "/sys/devices/system/cpu/cpufreq/iks-cpufreq/freq_table"
