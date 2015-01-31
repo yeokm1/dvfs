@@ -5,19 +5,19 @@
 #define TEXT_BUFFER_SIZE 20
 
 
-void writeStringToFile(char * filePath, char * value){
+void writeStringToFile(const char * filePath, const char * value){
     FILE * filePtr = fopen(filePath, "w");
     fputs(value, filePtr);
     fclose (filePtr);
 }
 
-void writeValueToFile(char * filePath, float value){
+void writeValueToFile(const char * filePath, float value){
     FILE * filePtr = fopen(filePath, "w");
     fprintf(filePtr, "%f", value);
     fclose (filePtr);
 }
 
-float getValueFromFile(char * filename){
+float getValueFromFile(const char * filename){
     float  result;
     char newLine[TEXT_BUFFER_SIZE];
     FILE   *filePtr = fopen(filename, "r");
@@ -29,7 +29,7 @@ float getValueFromFile(char * filename){
     return result;
 }
 
-char * getStringFromFile(char * filename){
+char * getStringFromFile(const char * filename){
 	FILE *fp =  fopen (filename , "r");
 	fseek( fp , 0L , SEEK_END);
 	long fileSize = ftell( fp );

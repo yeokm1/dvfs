@@ -21,6 +21,9 @@ CPU::CPU() {
 		prevCoreLoad[i] = 0;
 		prevCoreTotal[i] = 0;
 	}
+
+	cpuFreqPosition = -1;
+	numCPUFreqs = -1;
 }
 
 CPU::~CPU() {
