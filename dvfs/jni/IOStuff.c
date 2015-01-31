@@ -29,18 +29,9 @@ float getValueFromFile(const char * filename){
     return result;
 }
 
-char * getStringFromFile(const char * filename){
+void getStringFromFile(const char * filename, char * buffer, int buffSize){
 	FILE *fp =  fopen (filename , "r");
-	fseek( fp , 0L , SEEK_END);
-	long fileSize = ftell( fp );
-	long buffSize = fileSize + 1;
-	rewind(fp);
-
-	//+1 for null character
-	char *buffer = (char*) calloc(buffSize, sizeof(char));
 	fgets(buffer, buffSize, fp);
 	fclose(fp);
-
-	return buffer;
 }
 

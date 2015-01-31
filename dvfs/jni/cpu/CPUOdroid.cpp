@@ -14,11 +14,12 @@
 #define LOWEST_FREQ_POSITION 7 //0.6 GHz
 #define HIGHEST_FREQ_POSITION 17 //1.6 GHz
 
+#define FILE_BUFFER_SIZE 300
+
 #define CLASSNAME "CPUOdroid"
 
 CPUOdroid::CPUOdroid(){
-	CPU();
-	__android_log_print(ANDROID_LOG_INFO, CLASSNAME, "CPU Start");
+	__android_log_print(ANDROID_LOG_INFO, CLASSNAME, "CPUOdroid Start");
 
 	initCPUFreqValues();
 	setGovernorToUserspace();
@@ -31,8 +32,11 @@ CPUOdroid::~CPUOdroid(){
 
 void CPUOdroid::initCPUFreqValues(){
 
+	char freqLongString[FILE_BUFFER_SIZE];
 
-	char * freqLongString = getStringFromFile(FILE_CPU_AVAILABLE_FREQS);
+	getStringFromFile(FILE_CPU_AVAILABLE_FREQS, freqLongString, FILE_BUFFER_SIZE);
+
+	__android_log_print(ANDROID_LOG_INFO, CLASSNAME, "Frequencies available: %s", freqLongString);
 
 	char * freqString;
 
@@ -41,21 +45,17 @@ void CPUOdroid::initCPUFreqValues(){
     freqString = strtok (freqLongString," ");
     currentFreq = atol(freqString);
 
+    cpuFreqs.clear();
+    cpuFreqs.push_back(currentFreq);
 
-    numCPUFreqs = 1;
-    cpuFreqs[0] = currentFreq;
-
-	while (freqString != NULL){
-	   numCPUFreqs++;
-
-	   freqString = strtok (NULL, " ");
+	while ((freqString = strtok (NULL, " "))!= NULL){
+		__android_log_print(ANDROID_LOG_INFO, CLASSNAME, "Frequencies available: %s", freqString);
 	   currentFreq = atol(freqString);
-	   realloc (cpuFreqs, numCPUFreqs * sizeof(int));
-	   cpuFreqs[numCPUFreqs - 1] = currentFreq;
+	   cpuFreqs.push_back(currentFreq);
 	 }
 
 
-	 free(freqLongString);
+	__android_log_print(ANDROID_LOG_INFO, CLASSNAME, "Frequencies init end");
 
 }
 

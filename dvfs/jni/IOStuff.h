@@ -13,7 +13,7 @@
 void writeStringToFile(const char * filename, const char * value);
 void writeValueToFile(const char * filename, float value);
 float getValueFromFile(const char * filename);
-char * getStringFromFile(const char * filename);
+void getStringFromFile(const char * filename, char * buffer, int buffSize);
 
 
 

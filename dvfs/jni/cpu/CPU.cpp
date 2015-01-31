@@ -23,20 +23,15 @@ CPU::CPU() {
 	}
 
 	cpuFreqPosition = -1;
-	numCPUFreqs = -1;
 }
 
 CPU::~CPU() {
 	free(prevCoreLoad);
 	free(prevCoreTotal);
-	free(cpuFreqs);
 }
 
-int CPU::getNumCPUFreqs(){
-	return numCPUFreqs;
-}
 
-long * CPU::getCPUFreqs(){
+vector<long> CPU::getCPUFreqs(){
 	return cpuFreqs;
 }
 
