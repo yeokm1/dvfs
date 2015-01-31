@@ -33,7 +33,7 @@ public class CPUNexus5 extends CPU{
 	}
 
 	@Override
-	protected void priorToSetGovernorToUserspace() {
+	protected void afterSetGovernorToUserspace() {
 		io.setThisValueToThisFile(cpuFreqsString[0], FILE_CPU_SET_MIN_FREQ);
 		io.setThisValueToThisFile(cpuFreqsString[cpuFreqsString.length - 1], FILE_CPU_SET_MAX_FREQ);		
 	}

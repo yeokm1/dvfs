@@ -45,14 +45,14 @@ public abstract class CPU {
 		cpuFreqsString = getCPUFreqStrings();
 		cpuFreqs = convertStringArrayToLong(cpuFreqsString);
 		
-		priorToSetGovernorToUserspace();
 		setGovernorToUserspace();
+		afterSetGovernorToUserspace();
 		setCPUFreq(0); //Assume it is the lowest at the beginning
 		
 
 	}
 	
-	protected abstract void priorToSetGovernorToUserspace();
+	protected abstract void afterSetGovernorToUserspace();
 	
 	protected void initValues(){
 		for(int i = 0; i < NUM_CORES; i++){

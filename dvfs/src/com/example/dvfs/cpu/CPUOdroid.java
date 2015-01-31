@@ -35,7 +35,7 @@ public class CPUOdroid extends CPU{
 
 
 	@Override
-	protected void priorToSetGovernorToUserspace() {
+	protected void afterSetGovernorToUserspace() {
 		//Nothing
 		
 	}
