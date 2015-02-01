@@ -33,12 +33,14 @@ public class MainActivity extends Activity {
 		EditText fpsLowBoundView = (EditText) findViewById(R.id.fpsLowBound);
 		EditText fpsHighBoundView = (EditText) findViewById(R.id.fpsHighBound);
 		EditText slidingWindowView = (EditText) findViewById(R.id.slidingWindow);
-		RadioButton javaButton = (RadioButton) findViewById(R.id.language_java);
+		RadioButton ndkButton = (RadioButton) findViewById(R.id.language_ndk);
 		
-		if(javaButton.isChecked()){
-			dvfs = new DVFSJava();
-		} else {
+		boolean isOnNDK = ndkButton.isChecked();
+		
+		if(isOnNDK){
 			dvfs = new DVFSNdk();
+		} else {
+			dvfs = new DVFSJava();
 		}
 		
 
@@ -57,7 +59,7 @@ public class MainActivity extends Activity {
 			}
 			dvfs.start(fpsLowBound,fpsHighBound, slidingWindow);
 			
-			Toast.makeText(this, "Started, FPS Low: " + fpsLowBound + ", FPS High: " + fpsHighBound + ", Sliding Window: " + slidingWindow, Toast.LENGTH_LONG).show();
+			Toast.makeText(this, "Started, FPS Low: " + fpsLowBound + ", FPS High: " + fpsHighBound + ", Sliding Window: " + slidingWindow + ", NDK: " + isOnNDK , Toast.LENGTH_LONG).show();
 		} catch (NumberFormatException e){
 			Toast.makeText(this, "Invalid Input", Toast.LENGTH_SHORT).show();
 		}
