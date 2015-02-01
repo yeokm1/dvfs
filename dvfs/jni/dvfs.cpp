@@ -28,6 +28,7 @@ void processInputs(int currentFPS, int newFPSValue, bool fpsInRange, CPUOdroid *
 void runThisRegularly(CPUOdroid * cpu, GPUOdroid * gpu);
 int findLowestFreqPositionThatMeetsThisCost(double costToMeet, vector<long> availableFrequencies, float factor);
 void makeCPUMeetThisFPS(int targetFPS, int currentFPS, CPUOdroid * cpu);
+void makeGPUMeetThisFPS(int targetFPS, int currentFPS, GPUOdroid * gpu);
 
 extern "C"
 JNIEXPORT void JNICALL
@@ -157,12 +158,12 @@ void makeCPUMeetThisFPS(int targetFPS, int currentFPS, CPUOdroid * cpu){
 	__android_log_print(ANDROID_LOG_INFO, CLASSNAME, "CPU Highest Util %f", cpuUtil);
 
 
-	long currentCPUFrequency = cpuFreqs[0];
+	long currentCPUFrequency = cpuFreqs[currentCPUFreqPosition];
 
 
 	double currentCost = (cpuUtil * currentCPUFrequency)
-			* (((double)targetFPS)
-					/ currentFPS);
+					* (((double)targetFPS)
+							/ currentFPS);
 
 	float targetCPUUtil;
 
@@ -183,6 +184,30 @@ void makeCPUMeetThisFPS(int targetFPS, int currentFPS, CPUOdroid * cpu){
 	__android_log_print(ANDROID_LOG_INFO, CLASSNAME, "New CPU Freq Pos: %d", newCPUFreqPosition);
 }
 
+void makeGPUMeetThisFPS(int targetFPS, int currentFPS, GPUOdroid * gpu){
+	__android_log_print(ANDROID_LOG_INFO, CLASSNAME, "GPU meet this FPS: %d", targetFPS);
+
+	int currentGPUFreqPosition = gpu->getGpuFreqPosition();
+
+	vector<long> gpuFreqs = gpu->getGPUFreqs();
+
+	long currentGPUFrequency = gpuFreqs[currentGPUFreqPosition];
+
+	double currentCost = currentGPUFrequency
+					* (((double)targetFPS)
+							/ currentFPS);
+
+
+	int newGPUFreqPosition = findLowestFreqPositionThatMeetsThisCost(currentCost, gpuFreqs, 1);
+
+
+	if(currentGPUFreqPosition != newGPUFreqPosition){
+		gpu->setGPUFreq(newGPUFreqPosition);
+	}
+
+	__android_log_print(ANDROID_LOG_INFO, CLASSNAME, "New GPU Freq Pos: %d", newGPUFreqPosition);
+}
+
 void processInputs(int currentFPS, int newFPSValue, bool fpsInRange, CPUOdroid * cpu, GPUOdroid * gpu){
 
 
@@ -193,15 +218,11 @@ void processInputs(int currentFPS, int newFPSValue, bool fpsInRange, CPUOdroid *
 		return;
 	}
 
-	__android_log_print(ANDROID_LOG_INFO, CLASSNAME, "Outside range, sliding window increased");
-
 	currentSlidingWindowPosition++;
 
 	if(currentSlidingWindowPosition > slidingWindowLength){
-
 		currentSlidingWindowPosition = 0;
-
-		//makeGPUMeetThisFPS(newFPSValue, currentFPS);
+		makeGPUMeetThisFPS(newFPSValue, currentFPS, gpu);
 	}
 
 

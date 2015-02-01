@@ -14,10 +14,10 @@ class GPUOdroid: public GPU {
 public:
 	GPUOdroid();
 	virtual ~GPUOdroid();
+	void setGPUFreq(int position);
 
 protected:
 	void initGPUFreqValues();
-	void setGPUFreq(int position);
 };
 
 #endif /* GPU_GPUODROID_H_ */
