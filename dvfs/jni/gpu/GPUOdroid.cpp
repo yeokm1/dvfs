@@ -23,7 +23,6 @@ GPUOdroid::GPUOdroid() {
 }
 
 GPUOdroid::~GPUOdroid() {
-	void initGPUFreqValues();
 }
 
 
