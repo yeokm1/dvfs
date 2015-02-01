@@ -22,16 +22,16 @@ public:
 	CPU();
 	virtual ~CPU();
 	void setCPUFreq(int position);
-	vector<long> getCPUFreqs();
+	vector<long> getCPUFreqs(){ return cpuFreqs; };
+	int getCpuFreqPosition(){ return cpuFreqPosition; }
 	void getCPUUtil(float * util);
+	float getUtilisationOfHighestCore();
 
 protected:
 	long prevCoreLoad[NUM_CORES];
 	long prevCoreTotal[NUM_CORES];
 	vector<long> cpuFreqs;
 	int cpuFreqPosition;
-
-	int getCpuFreqPosition(){return cpuFreqPosition;}
 	void setGovernorToUserspace();
 	virtual void initCPUFreqValues();
 };

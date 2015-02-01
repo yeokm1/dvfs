@@ -26,13 +26,6 @@ GPU::GPU() {
 GPU::~GPU() {
 }
 
-vector<long> GPU::getGPUFreqs(){
-	return gpuFreqs;
-}
-
-int GPU::getGpuFreqPosition(){
-	return gpuFreqPosition;
-}
 
 void GPU::initGPUFreqValues(){
 	//Do nothing here

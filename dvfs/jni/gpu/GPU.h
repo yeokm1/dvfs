@@ -17,8 +17,8 @@ class GPU {
 public:
 	GPU();
 	virtual ~GPU();
-	vector<long> getGPUFreqs();
-	int getGpuFreqPosition();
+	vector<long> getGPUFreqs(){ return gpuFreqs; };
+	int getGpuFreqPosition(){ return gpuFreqPosition; };
 	int getFPS();
 
 protected:

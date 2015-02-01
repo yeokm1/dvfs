@@ -10,6 +10,7 @@
 #define CLASSNAME "DVFS-ndk"
 #define POLL_RATE_IN_MICROSECOND 1000000  //1 second
 #define DO_NOT_PURSUE_FPS_VALUE -1
+#define TARGET_CPU_UTILISATION 80
 
 
 int fpsLowBound;
@@ -23,8 +24,10 @@ void startDVFS(int _fpsLowBound, int _fpsHighBound, int _slidingWindowLength, bo
 void * threadFunction(void *arg);
 int timeval_subtract(struct timeval *result, struct timeval *t2, struct timeval *t1);
 int shouldPursueFPSRecalculationToThisFPS(int fps);
-void processInputs(int currentFPS, int newFPSValue, bool fpsInRange);
+void processInputs(int currentFPS, int newFPSValue, bool fpsInRange, CPUOdroid * cpu, GPUOdroid * gpu);
 void runThisRegularly(CPUOdroid * cpu, GPUOdroid * gpu);
+int findLowestFreqPositionThatMeetsThisCost(double costToMeet, vector<long> availableFrequencies, float factor);
+void makeCPUMeetThisFPS(int targetFPS, int currentFPS, CPUOdroid * cpu);
 
 extern "C"
 JNIEXPORT void JNICALL
@@ -112,10 +115,6 @@ int shouldPursueFPSRecalculationToThisFPS(int fps){
 
 void runThisRegularly(CPUOdroid * cpu, GPUOdroid * gpu){
 
-	//	float util[NUM_CORES];
-	//	cpu->getCPUUtil(util);
-	//	__android_log_print(ANDROID_LOG_INFO, CLASSNAME, "Util %f %f %f %f", util[0], util[1], util[2], util[3]);
-
 	int currentFPS = gpu->getFPS();
 	__android_log_print(ANDROID_LOG_INFO, CLASSNAME, "FPS %d", currentFPS);
 
@@ -125,19 +124,70 @@ void runThisRegularly(CPUOdroid * cpu, GPUOdroid * gpu){
 
 
 		if(newValueFPS == DO_NOT_PURSUE_FPS_VALUE){
-			processInputs(currentFPS, currentFPS, true);
+			processInputs(currentFPS, currentFPS, true, cpu, gpu);
 		} else {
-			processInputs(currentFPS, newValueFPS, false);
+			processInputs(currentFPS, newValueFPS, false, cpu , gpu);
 		}
 	}
 
 }
 
-void processInputs(int currentFPS, int newFPSValue, bool fpsInRange){
+int findLowestFreqPositionThatMeetsThisCost(double costToMeet, vector<long> availableFrequencies, float factor){
+
+	for(int position = 0; position < availableFrequencies.size(); position++){
+		long chosenFreq = availableFrequencies[position];
+		double calculatedCost = chosenFreq * factor;
+		if(calculatedCost >= costToMeet){
+			return position;
+		}
+	}
+
+	return availableFrequencies.size() - 1;
+}
+
+
+void makeCPUMeetThisFPS(int targetFPS, int currentFPS, CPUOdroid * cpu){
+	__android_log_print(ANDROID_LOG_INFO, CLASSNAME, "CPU meet this FPS: %d", targetFPS);
+
+	int currentCPUFreqPosition = cpu->getCpuFreqPosition();
+
+	vector<long> cpuFreqs = cpu->getCPUFreqs();
+
+	double cpuUtil = cpu->getUtilisationOfHighestCore();
+	__android_log_print(ANDROID_LOG_INFO, CLASSNAME, "CPU Highest Util %f", cpuUtil);
+
+
+	long currentCPUFrequency = cpuFreqs[0];
+
+
+	double currentCost = (cpuUtil * currentCPUFrequency)
+			* (((double)targetFPS)
+					/ currentFPS);
+
+	float targetCPUUtil;
+
+	if(cpuUtil > TARGET_CPU_UTILISATION){
+		targetCPUUtil = cpuUtil;
+	} else {
+		targetCPUUtil = TARGET_CPU_UTILISATION;
+	}
+
+
+	int newCPUFreqPosition = findLowestFreqPositionThatMeetsThisCost(currentCost, cpuFreqs, targetCPUUtil);
+
+
+	if(currentCPUFreqPosition != newCPUFreqPosition){
+		cpu->setCPUFreq(newCPUFreqPosition);
+	}
+
+	__android_log_print(ANDROID_LOG_INFO, CLASSNAME, "New CPU Freq Pos: %d", newCPUFreqPosition);
+}
+
+void processInputs(int currentFPS, int newFPSValue, bool fpsInRange, CPUOdroid * cpu, GPUOdroid * gpu){
 
 
 	__android_log_print(ANDROID_LOG_INFO, CLASSNAME, "Current FPS: %d, target FPS: %d", currentFPS, newFPSValue);
-	//makeCPUMeetThisFPS(newFPSValue, currentFPS);
+	makeCPUMeetThisFPS(newFPSValue, currentFPS, cpu);
 
 	if(fpsInRange){
 		return;

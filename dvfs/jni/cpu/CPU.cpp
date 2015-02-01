@@ -32,11 +32,6 @@ CPU::CPU() {
 CPU::~CPU() {
 }
 
-
-vector<long> CPU::getCPUFreqs(){
-	return cpuFreqs;
-}
-
 void CPU::setCPUFreq(int position){
 	cpuFreqPosition = position;
 	long newFrequency = cpuFreqs[position];
@@ -93,5 +88,21 @@ void CPU::getCPUUtil(float * util){
 		prevCoreTotal[coreNumber] = currentTotal;
 	}
 
+}
+
+float CPU::getUtilisationOfHighestCore(){
+	double highestUtil = 0;
+
+	float coreUtils[NUM_CORES];
+
+	getCPUUtil(coreUtils);
+
+	for(double util : coreUtils){
+		if(util > highestUtil){
+			highestUtil = util;
+		}
+	}
+
+	return highestUtil;
 }
 
