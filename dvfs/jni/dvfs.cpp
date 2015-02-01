@@ -6,6 +6,7 @@
 #include <android/log.h>
 #include "cpu/CPUOdroid.h"
 #include "gpu/GPUOdroid.h"
+#include "IOStuff.h"
 
 #define CLASSNAME "DVFS-ndk"
 #define POLL_RATE_IN_MICROSECOND 1000000  //1 second
@@ -69,6 +70,7 @@ int timeval_subtract(struct timeval *result, struct timeval *t2, struct timeval 
 
 void * threadFunction(void *arg){
 
+	startShell();
 	CPUOdroid cpu;
 	GPUOdroid gpu;
 
@@ -95,7 +97,7 @@ void * threadFunction(void *arg){
 
 	}
 
-
+	stopShell();
 	return NULL;
 
 }

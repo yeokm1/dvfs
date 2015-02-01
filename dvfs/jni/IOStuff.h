@@ -16,7 +16,8 @@ float getValueFromFile(const char * filename);
 void getStringFromFile(const char * filename, char * buffer, int buffSize);
 void getStringFromFileByCat(const char * filename, char * buffer, int buffSize);
 
-
+void startShell();
+void stopShell();
 
 
 #endif /* IOSTUFF_H_ */

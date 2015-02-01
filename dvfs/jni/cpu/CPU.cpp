@@ -7,8 +7,8 @@
 #include <cstdlib>
 #include <stdlib.h>
 #include <android/log.h>
+#include "IOStuff.h"
 #include "CPU.h"
-#include "IOStuff.c"
 
 
 #define FILE_CPU_UTIL "/proc/stat"
