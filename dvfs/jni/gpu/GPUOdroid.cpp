@@ -61,7 +61,7 @@ void GPUOdroid::initGPUFreqValues(){
 
 	gpuFreqs.clear();
 
-	while(gpuFreqsStack.empty()){
+	while(!gpuFreqsStack.empty()){
 		long freq = gpuFreqsStack.top();
 		gpuFreqsStack.pop();
 		gpuFreqs.push_back(freq);
@@ -72,7 +72,7 @@ void GPUOdroid::initGPUFreqValues(){
 void GPUOdroid::setGPUFreq(int position){
 	gpuFreqPosition = position;
 	long newFrequency = gpuFreqs[position];
-	writeValueToFile(FILE_GPU_MIN_FREQ,  newFrequency);
-	writeValueToFile(FILE_GPU_MAX_FREQ,  newFrequency);
+	writeValueToFile(FILE_GPU_MIN_FREQ, newFrequency);
+	writeValueToFile(FILE_GPU_MAX_FREQ, newFrequency);
 }
 

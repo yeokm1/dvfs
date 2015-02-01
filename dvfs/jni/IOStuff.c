@@ -16,9 +16,9 @@ void writeStringToFile(const char * filePath, const char * value){
 	system(buff);
 }
 
-void writeValueToFile(const char * filePath, float value){
+void writeValueToFile(const char * filePath, long value){
 	char buff[COMMAND_LENGTH];
-	sprintf(buff,"su -c \"echo %f > %s\"", value, filePath );
+	sprintf(buff,"su -c \"echo %ld > %s\"", value, filePath );
 	system(buff);
 }
 
