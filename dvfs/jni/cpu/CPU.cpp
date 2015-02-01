@@ -24,9 +24,8 @@ CPU::CPU() {
 		prevCoreLoad[i] = 0;
 		prevCoreTotal[i] = 0;
 	}
-
-	cpuFreqPosition = 0;
 	setGovernorToUserspace();
+	cpuFreqPosition = 0;
 }
 
 CPU::~CPU() {
