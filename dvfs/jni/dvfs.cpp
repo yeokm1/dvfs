@@ -5,6 +5,7 @@
 #include <pthread.h>
 #include <android/log.h>
 #include "cpu/CPUOdroid.h"
+#include "gpu/GPU.h"
 
 #define CLASSNAME "DVFS-ndk"
 #define POLL_RATE_IN_MICROSECOND 1000000  //1 second
@@ -20,7 +21,7 @@ void startDVFS(int _fpsLowBound, int _fpsHighBound, int _slidingWindowLength, bo
 void * threadFunction(void *arg);
 int timeval_subtract(struct timeval *result, struct timeval *t2, struct timeval *t1);
 
-void runThisRegularly(CPUOdroid * cpu);
+void runThisRegularly(CPUOdroid * cpu, GPU * gpu);
 
 extern "C"
 JNIEXPORT void JNICALL
@@ -62,6 +63,7 @@ int timeval_subtract(struct timeval *result, struct timeval *t2, struct timeval 
 void * threadFunction(void *arg){
 
 	CPUOdroid cpu;
+	GPU gpu;
 
 	struct timeval tvBegin, tvEnd, tvDiff;
 
@@ -69,7 +71,7 @@ void * threadFunction(void *arg){
 
 		gettimeofday(&tvBegin, NULL);
 
-		runThisRegularly(&cpu);
+		runThisRegularly(&cpu, &gpu);
 
 		gettimeofday(&tvEnd, NULL);
 
@@ -92,12 +94,16 @@ void * threadFunction(void *arg){
 }
 
 
-void runThisRegularly(CPUOdroid * cpu){
+void runThisRegularly(CPUOdroid * cpu, GPU * gpu){
 	__android_log_print(ANDROID_LOG_INFO, CLASSNAME, "Thread run");
 
-	float util[NUM_CORES];
-	cpu->getCPUUtil(util);
-	__android_log_print(ANDROID_LOG_INFO, CLASSNAME, "Util %f %f %f %f", util[0], util[1], util[2], util[3]);
+//	float util[NUM_CORES];
+//	cpu->getCPUUtil(util);
+//	__android_log_print(ANDROID_LOG_INFO, CLASSNAME, "Util %f %f %f %f", util[0], util[1], util[2], util[3]);
+
+	 int fps = gpu->getFPS();
+	 __android_log_print(ANDROID_LOG_INFO, CLASSNAME, "FPS %d", fps);
+
 }
 
 
