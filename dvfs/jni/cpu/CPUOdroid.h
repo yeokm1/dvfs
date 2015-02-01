@@ -10,7 +10,7 @@
 
 #include "CPU.h"
 
-class CPUOdroid : CPU{
+class CPUOdroid : public CPU{
 public:
 	CPUOdroid();
 	virtual ~CPUOdroid();

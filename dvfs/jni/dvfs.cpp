@@ -20,7 +20,7 @@ void startDVFS(int _fpsLowBound, int _fpsHighBound, int _slidingWindowLength, bo
 void * threadFunction(void *arg);
 int timeval_subtract(struct timeval *result, struct timeval *t2, struct timeval *t1);
 
-void runThisRegularly();
+void runThisRegularly(CPUOdroid * cpu);
 
 extern "C"
 JNIEXPORT void JNICALL
@@ -69,7 +69,7 @@ void * threadFunction(void *arg){
 
 		gettimeofday(&tvBegin, NULL);
 
-		runThisRegularly();
+		runThisRegularly(&cpu);
 
 		gettimeofday(&tvEnd, NULL);
 
@@ -92,8 +92,12 @@ void * threadFunction(void *arg){
 }
 
 
-void runThisRegularly(){
-	__android_log_print(ANDROID_LOG_INFO, CLASSNAME, "Thread regular");
+void runThisRegularly(CPUOdroid * cpu){
+	__android_log_print(ANDROID_LOG_INFO, CLASSNAME, "Thread run");
+
+	float util[NUM_CORES];
+	cpu->getCPUUtil(util);
+	__android_log_print(ANDROID_LOG_INFO, CLASSNAME, "Util %f %f %f %f", util[0], util[1], util[2], util[3]);
 }
 
 

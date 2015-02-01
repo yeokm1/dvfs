@@ -36,7 +36,7 @@ float getValueFromFile(const char * filename){
 
 void getStringFromFile(const char * filename, char * buffer, int buffSize){
 	FILE *fp =  fopen (filename , "r");
-	fgets(buffer, buffSize, fp);
+	fread(buffer, sizeof(char), buffSize, fp);
 	fclose(fp);
 }
 
