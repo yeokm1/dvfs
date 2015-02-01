@@ -17,9 +17,6 @@ public:
 
 private:
 	void initCPUFreqValues();
-	void afterSetGovernorToUserspace(){
-		//Do nothing
-	};
 };
 
 #endif /* CPU_CPUODROID_H_ */
