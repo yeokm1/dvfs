@@ -34,6 +34,14 @@ int GPU::getGpuFreqPosition(){
 	return gpuFreqPosition;
 }
 
+void GPU::initGPUFreqValues(){
+	//Do nothing here
+}
+
+void GPU::setGPUFreq(int position){
+	//Do nothing here
+}
+
 int GPU::getFPS(){
 	FILE *pp = popen(FPS_COMMAND, "r");
 

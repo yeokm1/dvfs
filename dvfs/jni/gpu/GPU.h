@@ -24,6 +24,8 @@ public:
 protected:
 	vector<long> gpuFreqs;
 	int gpuFreqPosition;;
+	virtual void initGPUFreqValues();
+	virtual void setGPUFreq(int position);
 };
 
 #endif /* GPU_GPU_H_ */
