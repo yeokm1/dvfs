@@ -26,8 +26,6 @@ CPU::CPU() {
 }
 
 CPU::~CPU() {
-	free(prevCoreLoad);
-	free(prevCoreTotal);
 }
 
 
