@@ -15,7 +15,6 @@
 #define FILE_CPU_SCALING_FREQ  "/sys/devices/system/cpu/cpu0/cpufreq/scaling_setspeed"
 #define FILE_CPU_SCALING_GOVERNER  "/sys/devices/system/cpu/cpu0/cpufreq/scaling_governor"
 
-#define CLASSNAME "CPU"
 #define USERSPACE "userspace"
 #define SIZE_PROC_STAT_BUFF 4000
 
