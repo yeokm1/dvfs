@@ -26,6 +26,7 @@ CPU::CPU() {
 	}
 
 	cpuFreqPosition = 0;
+	setGovernorToUserspace();
 }
 
 CPU::~CPU() {

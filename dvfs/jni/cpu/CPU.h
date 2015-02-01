@@ -39,7 +39,6 @@ protected:
 	void initCPUFreqs();
 	void setGovernorToUserspace();
 	void initCPUFreqValues();
-	void afterSetGovernorToUserspace();
 };
 
 

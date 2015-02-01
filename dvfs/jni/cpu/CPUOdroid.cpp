@@ -23,8 +23,6 @@ CPUOdroid::CPUOdroid(){
 	__android_log_print(ANDROID_LOG_INFO, CLASSNAME, "CPUOdroid Start");
 
 	initCPUFreqValues();
-	setGovernorToUserspace();
-	afterSetGovernorToUserspace();
 	setCPUFreq(0);
 }
 
