@@ -46,6 +46,10 @@ void CPU::setGovernorToUserspace(){
 	writeStringToFile(FILE_CPU_SCALING_GOVERNER, USERSPACE);
 }
 
+void CPU::initCPUFreqValues(){
+
+}
+
 void CPU::getCPUUtil(float * util){
 	//String[] toks = io.getAvailableOptionsFromFile(FILE_CPU_UTIL, false);
 
@@ -82,7 +86,7 @@ void CPU::getCPUUtil(float * util){
 		long currentLoad = user + nice + system + iowait + irq + softirq;
 		long currentTotal = currentLoad + currentIdle;
 
-		util[coreNumber] = ((((float) (currentLoad - prevCoreLoad[coreNumber])) / (currentTotal - prevCoreTotal[coreNumber]))) * 100;
+		util[coreNumber] = ((((double) (currentLoad - prevCoreLoad[coreNumber])) / (currentTotal - prevCoreTotal[coreNumber]))) * 100;
 
 		prevCoreLoad[coreNumber] = currentLoad;
 		prevCoreTotal[coreNumber] = currentTotal;

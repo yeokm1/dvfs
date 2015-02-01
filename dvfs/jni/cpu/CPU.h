@@ -36,9 +36,8 @@ protected:
 	int cpuFreqPosition;
 
 	int getCpuFreqPosition(){return cpuFreqPosition;}
-	void initCPUFreqs();
 	void setGovernorToUserspace();
-	void initCPUFreqValues();
+	virtual void initCPUFreqValues();
 };
 
 
