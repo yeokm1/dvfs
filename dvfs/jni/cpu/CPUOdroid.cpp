@@ -6,13 +6,14 @@
  */
 
 #include <cstdlib>
+#include <stack>
 #include <android/log.h>
 #include "CPUOdroid.h"
 #include "IOStuff.h"
 
 #define FILE_CPU_AVAILABLE_FREQS "/sys/devices/system/cpu/cpufreq/iks-cpufreq/freq_table"
 #define LOWEST_FREQ_POSITION 7 //0.6 GHz
-#define HIGHEST_FREQ_POSITION 17 //1.6 GHz
+#define HIGHEST_FREQ_POSITION 16 //1.6 GHz
 
 #define FILE_BUFFER_SIZE 300
 
@@ -45,17 +46,34 @@ void CPUOdroid::initCPUFreqValues(){
     freqString = strtok (freqLongString," ");
     currentFreq = atol(freqString);
 
-    cpuFreqs.clear();
-    cpuFreqs.push_back(currentFreq);
+
+    //We use a stack as the frequencies in the file are in descending order
+    std::stack<long> cpuFreqsStack;
+
+    cpuFreqsStack.push(currentFreq);
 
 	while ((freqString = strtok (NULL, " ")) != NULL){
-		__android_log_print(ANDROID_LOG_INFO, CLASSNAME, "Frequencies available: %s", freqString);
 	   currentFreq = atol(freqString);
-	   cpuFreqs.push_back(currentFreq);
+	   if(currentFreq != 0){
+		   cpuFreqsStack.push(currentFreq);
+	   }
 	 }
 
 
-	__android_log_print(ANDROID_LOG_INFO, CLASSNAME, "Frequencies init end");
+
+
+	cpuFreqs.clear();
+
+	for(int i = 0; !cpuFreqsStack.empty(); i++){
+		long freq = cpuFreqsStack.top();
+		cpuFreqsStack.pop();
+		if(i >= LOWEST_FREQ_POSITION && i <= HIGHEST_FREQ_POSITION){
+			__android_log_print(ANDROID_LOG_INFO, CLASSNAME, "Freqs used %ld", freq);
+			cpuFreqs.push_back(freq);
+		}
+	}
+
+
 
 }
 
