@@ -1,3 +1,4 @@
+#include <IOStuff.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/stat.h>
@@ -5,12 +6,15 @@
 #include <unistd.h>
 #include "pstream.h"
 
-
 #define TEXT_BUFFER_SIZE 20
 #define COMMAND_LENGTH 200
 #define CLASSNAME "IOStuff"
 
 redi::pstream * proc;
+
+redi::pstream * getShellInstance(){
+	return proc;
+}
 
 void startShell(){
 	proc = new redi::pstream("su", redi::pstreams::pstdout | redi::pstreams::pstdin);
@@ -23,13 +27,13 @@ void stopShell(){
 void writeStringToFile(const char * filePath, const char * value){
 	char buff[COMMAND_LENGTH];
 	sprintf(buff,"echo %s > %s", value, filePath );
-	*proc << buff << std::endl;
+	* proc << buff << std::endl;
 }
 
 void writeValueToFile(const char * filePath, long value){
 	char buff[COMMAND_LENGTH];
 	sprintf(buff,"echo %ld > %s", value, filePath );
-	*proc << buff << std::endl;
+	* proc << buff << std::endl;
 }
 
 float getValueFromFile(const char * filename){
@@ -54,8 +58,11 @@ void getStringFromFileByCat(const char * filename, char * buffer, int buffSize){
 	char command[COMMAND_LENGTH];
 	sprintf(command,"cat %s", filename);
 
-	FILE *pp = popen(command, "r");
-	fgets(buffer, buffSize, pp);
-	pclose(pp);
+	* proc << command << std::endl;
+
+	std::string line;
+	std::getline(* proc, line);
+	std:strcpy(buffer, line.c_str());
+
 }
 

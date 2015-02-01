@@ -9,6 +9,7 @@
 #ifndef IOSTUFF_H_
 
 #define IOSTUFF_H_
+#include "pstream.h"
 
 void writeStringToFile(const char * filename, const char * value);
 void writeValueToFile(const char * filename, long value);
@@ -18,7 +19,7 @@ void getStringFromFileByCat(const char * filename, char * buffer, int buffSize);
 
 void startShell();
 void stopShell();
-
+redi::pstream * getShellInstance();
 
 #endif /* IOSTUFF_H_ */
 
