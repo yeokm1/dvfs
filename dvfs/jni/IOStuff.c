@@ -40,3 +40,12 @@ void getStringFromFile(const char * filename, char * buffer, int buffSize){
 	fclose(fp);
 }
 
+void getStringFromFileByCat(const char * filename, char * buffer, int buffSize){
+	char command[COMMAND_LENGTH];
+	sprintf(command,"cat %s", filename);
+
+	FILE *pp = popen(command, "r");
+	fgets(buffer, buffSize, pp);
+	pclose(pp);
+}
+

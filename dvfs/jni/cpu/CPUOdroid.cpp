@@ -35,7 +35,7 @@ void CPUOdroid::initCPUFreqValues(){
 
 	getStringFromFile(FILE_CPU_AVAILABLE_FREQS, freqLongString, FILE_BUFFER_SIZE);
 
-	__android_log_print(ANDROID_LOG_INFO, CLASSNAME, "Frequencies available: %s", freqLongString);
+	__android_log_print(ANDROID_LOG_INFO, CLASSNAME, "CPU Freqs available: %s", freqLongString);
 
 	char * freqString;
 
@@ -66,7 +66,7 @@ void CPUOdroid::initCPUFreqValues(){
 		long freq = cpuFreqsStack.top();
 		cpuFreqsStack.pop();
 		if(i >= LOWEST_FREQ_POSITION && i <= HIGHEST_FREQ_POSITION){
-			__android_log_print(ANDROID_LOG_INFO, CLASSNAME, "Freqs used %ld", freq);
+			__android_log_print(ANDROID_LOG_INFO, CLASSNAME, "CPU Freqs used %ld", freq);
 			cpuFreqs.push_back(freq);
 		}
 	}

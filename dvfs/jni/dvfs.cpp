@@ -5,7 +5,7 @@
 #include <pthread.h>
 #include <android/log.h>
 #include "cpu/CPUOdroid.h"
-#include "gpu/GPU.h"
+#include "gpu/GPUOdroid.h"
 
 #define CLASSNAME "DVFS-ndk"
 #define POLL_RATE_IN_MICROSECOND 1000000  //1 second
@@ -21,7 +21,7 @@ void startDVFS(int _fpsLowBound, int _fpsHighBound, int _slidingWindowLength, bo
 void * threadFunction(void *arg);
 int timeval_subtract(struct timeval *result, struct timeval *t2, struct timeval *t1);
 
-void runThisRegularly(CPUOdroid * cpu, GPU * gpu);
+void runThisRegularly(CPUOdroid * cpu, GPUOdroid * gpu);
 
 extern "C"
 JNIEXPORT void JNICALL
@@ -63,7 +63,7 @@ int timeval_subtract(struct timeval *result, struct timeval *t2, struct timeval 
 void * threadFunction(void *arg){
 
 	CPUOdroid cpu;
-	GPU gpu;
+	GPUOdroid gpu;
 
 	struct timeval tvBegin, tvEnd, tvDiff;
 
@@ -94,7 +94,7 @@ void * threadFunction(void *arg){
 }
 
 
-void runThisRegularly(CPUOdroid * cpu, GPU * gpu){
+void runThisRegularly(CPUOdroid * cpu, GPUOdroid * gpu){
 	__android_log_print(ANDROID_LOG_INFO, CLASSNAME, "Thread run");
 
 //	float util[NUM_CORES];
