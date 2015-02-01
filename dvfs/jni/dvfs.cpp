@@ -9,18 +9,21 @@
 
 #define CLASSNAME "DVFS-ndk"
 #define POLL_RATE_IN_MICROSECOND 1000000  //1 second
+#define DO_NOT_PURSUE_FPS_VALUE -1
 
 
-int fpsLowbound;
+int fpsLowBound;
 int fpsHighBound;
 int slidingWindowLength;
 bool dvfsInProgress;
+int currentSlidingWindowPosition;
 pthread_t threadTask;
 
 void startDVFS(int _fpsLowBound, int _fpsHighBound, int _slidingWindowLength, bool _isPhoneNexus5);
 void * threadFunction(void *arg);
 int timeval_subtract(struct timeval *result, struct timeval *t2, struct timeval *t1);
-
+int shouldPursueFPSRecalculationToThisFPS(int fps);
+void processInputs(int currentFPS, int newFPSValue, bool fpsInRange);
 void runThisRegularly(CPUOdroid * cpu, GPUOdroid * gpu);
 
 extern "C"
@@ -41,7 +44,7 @@ Java_com_example_dvfs_DVFSNdk_stopDVFS( JNIEnv* env, jobject thiz ){
 
 void startDVFS(int _fpsLowBound, int _fpsHighBound, int _slidingWindowLength, bool _isPhoneNexus5){
 
-	fpsLowbound = _fpsLowBound;
+	fpsLowBound = _fpsLowBound;
 	fpsHighBound = _fpsHighBound;
 	slidingWindowLength = _slidingWindowLength;
 	dvfsInProgress = true;
@@ -53,11 +56,11 @@ void startDVFS(int _fpsLowBound, int _fpsHighBound, int _slidingWindowLength, bo
 //From http://stackoverflow.com/questions/1468596/calculating-elapsed-time-in-a-c-program-in-milliseconds
 /* Return 1 if the difference is negative, otherwise 0.  */
 int timeval_subtract(struct timeval *result, struct timeval *t2, struct timeval *t1){
-    long int diff = (t2->tv_usec + 1000000 * t2->tv_sec) - (t1->tv_usec + 1000000 * t1->tv_sec);
-    result->tv_sec = diff / 1000000;
-    result->tv_usec = diff % 1000000;
+	long int diff = (t2->tv_usec + 1000000 * t2->tv_sec) - (t1->tv_usec + 1000000 * t1->tv_sec);
+	result->tv_sec = diff / 1000000;
+	result->tv_usec = diff % 1000000;
 
-    return (diff<0);
+	return (diff<0);
 }
 
 void * threadFunction(void *arg){
@@ -93,16 +96,64 @@ void * threadFunction(void *arg){
 
 }
 
+int shouldPursueFPSRecalculationToThisFPS(int fps){
+	if(fps > fpsHighBound){
+		//We need to decrease FPS
+		return fpsLowBound;
+	} else if(fps < fpsLowBound){
+		//We need to increase FPS
+		return fpsHighBound;
+	} else {
+		currentSlidingWindowPosition = 0;
+		return DO_NOT_PURSUE_FPS_VALUE;
+	}
+
+}
 
 void runThisRegularly(CPUOdroid * cpu, GPUOdroid * gpu){
-	__android_log_print(ANDROID_LOG_INFO, CLASSNAME, "Thread run");
 
-//	float util[NUM_CORES];
-//	cpu->getCPUUtil(util);
-//	__android_log_print(ANDROID_LOG_INFO, CLASSNAME, "Util %f %f %f %f", util[0], util[1], util[2], util[3]);
+	//	float util[NUM_CORES];
+	//	cpu->getCPUUtil(util);
+	//	__android_log_print(ANDROID_LOG_INFO, CLASSNAME, "Util %f %f %f %f", util[0], util[1], util[2], util[3]);
 
-	 int fps = gpu->getFPS();
-	 __android_log_print(ANDROID_LOG_INFO, CLASSNAME, "FPS %d", fps);
+	int currentFPS = gpu->getFPS();
+	__android_log_print(ANDROID_LOG_INFO, CLASSNAME, "FPS %d", currentFPS);
+
+	if(currentFPS != NO_FPS_CALCULATED){
+
+		int newValueFPS = shouldPursueFPSRecalculationToThisFPS(currentFPS);
+
+
+		if(newValueFPS == DO_NOT_PURSUE_FPS_VALUE){
+			processInputs(currentFPS, currentFPS, true);
+		} else {
+			processInputs(currentFPS, newValueFPS, false);
+		}
+	}
+
+}
+
+void processInputs(int currentFPS, int newFPSValue, bool fpsInRange){
+
+
+	__android_log_print(ANDROID_LOG_INFO, CLASSNAME, "Current FPS: %d, target FPS: %d", currentFPS, newFPSValue);
+	//makeCPUMeetThisFPS(newFPSValue, currentFPS);
+
+	if(fpsInRange){
+		return;
+	}
+
+	__android_log_print(ANDROID_LOG_INFO, CLASSNAME, "Outside range, sliding window increased");
+
+	currentSlidingWindowPosition++;
+
+	if(currentSlidingWindowPosition > slidingWindowLength){
+
+		currentSlidingWindowPosition = 0;
+
+		//makeGPUMeetThisFPS(newFPSValue, currentFPS);
+	}
+
 
 }
 
