@@ -11,14 +11,15 @@
 #include "IOStuff.c"
 
 
-
+#define FILE_CPU_UTIL "/proc/stat"
+#define FILE_CPU_SCALING_FREQ  "/sys/devices/system/cpu/cpu0/cpufreq/scaling_setspeed"
+#define FILE_CPU_SCALING_GOVERNER  "/sys/devices/system/cpu/cpu0/cpufreq/scaling_governor"
 
 #define CLASSNAME "CPU"
 #define USERSPACE "userspace"
 #define SIZE_PROC_STAT_BUFF 4000
 
 CPU::CPU() {
-	__android_log_print(ANDROID_LOG_INFO, CLASSNAME, "CPU Start");
 
 	for(int i = 0; i < NUM_CORES; i++){
 		prevCoreLoad[i] = 0;

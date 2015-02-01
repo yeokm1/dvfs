@@ -14,10 +14,6 @@
 #define CPU_CPU_H_
 #define NUM_CORES 4
 
-#define FILE_CPU_UTIL "/proc/stat"
-#define FILE_CPU_SCALING_FREQ  "/sys/devices/system/cpu/cpu0/cpufreq/scaling_setspeed"
-#define FILE_CPU_SCALING_GOVERNER  "/sys/devices/system/cpu/cpu0/cpufreq/scaling_governor"
-
 using std::vector;
 
 class CPU {
