@@ -9,7 +9,6 @@
 #include "pstream.h"
 
 #define TEXT_BUFFER_SIZE 20
-#define LONG_COMMAND_SIZE 1000
 #define COMMAND_LENGTH 200
 #define CLASSNAME "IOStuff"
 
