@@ -4,11 +4,15 @@
 #include <sys/stat.h>
 #include <android/log.h>
 #include <unistd.h>
+#include <limits>
+#include <sstream>
 #include "pstream.h"
 
 #define TEXT_BUFFER_SIZE 20
+#define LONG_COMMAND_SIZE 1000
 #define COMMAND_LENGTH 200
 #define CLASSNAME "IOStuff"
+
 
 redi::pstream * proc;
 
@@ -58,11 +62,8 @@ void getStringFromFileByCat(const char * filename, char * buffer, int buffSize){
 	char command[COMMAND_LENGTH];
 	sprintf(command,"cat %s", filename);
 
-	* proc << command << std::endl;
-
-	std::string line;
-	std::getline(* proc, line);
-	std:strcpy(buffer, line.c_str());
-
+	FILE *pp = popen(command, "r");
+	fgets(buffer, buffSize, pp);
+	pclose(pp);
 }
 

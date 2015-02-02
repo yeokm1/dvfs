@@ -17,7 +17,8 @@
 
 #define CLASSNAME "GPU"
 #define FPS_RESULT_LINE_LENGTH 100
-#define FPS_COMMAND "dumpsys SurfaceFlinger --latency SurfaceView"
+#define FPS_COMMAND "dumpsys SurfaceFlinger --latency SurfaceView && echo e"
+#define FPS_COMMAND_ENDING "e"
 #define FPS_INTERVAL_NANOS 1000000000
 #define MAX_FPS 60
 
@@ -43,33 +44,33 @@ int GPU::getFPS(){
 
 	__android_log_print(ANDROID_LOG_INFO, CLASSNAME, "Get FPS start");
 
+
 	redi::pstream * proc = getShellInstance();
 	* proc << FPS_COMMAND << std::endl;
 
-
-	char line[FPS_RESULT_LINE_LENGTH];
-
-	std::streamsize extracted = proc->readsome(line, 1);
-
-
-	if(extracted == 0){
-		__android_log_print(ANDROID_LOG_INFO, CLASSNAME, "FPS line length 0");
-		return NO_FPS_CALCULATED;
-	}
-
-
-	proc->getline(line, FPS_RESULT_LINE_LENGTH);
-
-
+	string intermediate;
 	char *finishFrameTime;
-
 
 	stack<long long> values;
 
-	while(proc->readsome(line, 1) > 0){
-		//Ignore the first two values
+	//Grab the first line. It is usually in the form 16666... and useless
+	std::getline(*proc, intermediate);
 
-		proc->getline(line, FPS_RESULT_LINE_LENGTH);
+	if(intermediate.compare(FPS_COMMAND_ENDING) == 0){
+		return NO_FPS_CALCULATED;
+	}
+
+    while (true) {
+
+    	std::getline(*proc, intermediate);
+    	if(intermediate.compare(FPS_COMMAND_ENDING) == 0){
+    		break;
+    	}
+
+		const char * lineConst = intermediate.c_str();
+		char line[intermediate.length()];
+		std::strcpy(line, lineConst);
+
 		strtok(line, "\t");
 		strtok(NULL, "\t");
 		finishFrameTime = strtok(NULL, "\t");
@@ -79,13 +80,12 @@ int GPU::getFPS(){
 			values.push(parsed);
 		}
 
-	}
+    }
 
-
-	//Final check to ensure there is data collected in the first place
 	if(values.size() == 0){
 		return NO_FPS_CALCULATED;
 	}
+
 
 	int frameCount = 0;
 	int fps = 0;
