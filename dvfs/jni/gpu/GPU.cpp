@@ -51,14 +51,14 @@ int GPU::getFPS(){
 	string intermediate;
 	char *finishFrameTime;
 
-	stack<long long> values;
-
 	//Grab the first line. It is usually in the form 16666... and useless
 	std::getline(*proc, intermediate);
 
 	if(intermediate.compare(FPS_COMMAND_ENDING) == 0){
 		return NO_FPS_CALCULATED;
 	}
+
+	stack<long long> values;
 
     while (true) {
 
