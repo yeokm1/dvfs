@@ -15,8 +15,6 @@
 #define LOWEST_FREQ_POSITION 7 //0.6 GHz
 #define HIGHEST_FREQ_POSITION 16 //1.6 GHz
 
-#define FILE_BUFFER_SIZE 300
-
 #define CLASSNAME "CPUOdroid"
 
 CPUOdroid::CPUOdroid(){

@@ -13,6 +13,7 @@
 #include <vector>
 #define CPU_CPU_H_
 #define NUM_CORES 4
+#define FILE_BUFFER_SIZE 300
 
 using std::vector;
 
