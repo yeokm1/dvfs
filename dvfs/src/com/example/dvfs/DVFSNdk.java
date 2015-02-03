@@ -9,10 +9,7 @@ public class DVFSNdk implements DVFS {
 	
 	@Override
 	public void start(int fpsLowBound, int fpsHighBound, int slidingWindowLength) {
-		
-		boolean isPhoneNexus5 = Factory.isPhoneNexus5();
-		
-		startDVFS(fpsLowBound, fpsHighBound, slidingWindowLength, isPhoneNexus5);
+		startDVFS(fpsLowBound, fpsHighBound, slidingWindowLength);
 	}
 
 	@Override
@@ -21,7 +18,7 @@ public class DVFSNdk implements DVFS {
 	}
 	
 	
-    public native int startDVFS(int fpsLowBound, int fpsHighBound, int slidingWindowLength, boolean isPhoneNexus5);
+    public native int startDVFS(int fpsLowBound, int fpsHighBound, int slidingWindowLength);
     
     public native int stopDVFS();
     

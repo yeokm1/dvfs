@@ -5,8 +5,11 @@
 #include <pthread.h>
 #include <android/log.h>
 #include "cpu/CPUOdroid.h"
+#include "cpu/CPUNexus5.h"
 #include "gpu/GPUOdroid.h"
+#include "gpu/GPUNexus5.h"
 #include "IOStuff.h"
+#include "RetrieveModel.h"
 
 #define CLASSNAME "DVFS-ndk"
 #define POLL_RATE_IN_MICROSECOND 1000000  //1 second
@@ -21,21 +24,21 @@ bool dvfsInProgress;
 int currentSlidingWindowPosition;
 pthread_t threadTask;
 
-void startDVFS(int _fpsLowBound, int _fpsHighBound, int _slidingWindowLength, bool _isPhoneNexus5);
+void startDVFS(int _fpsLowBound, int _fpsHighBound, int _slidingWindowLength);
 void * threadFunction(void *arg);
 int timeval_subtract(struct timeval *result, struct timeval *t2, struct timeval *t1);
 int shouldPursueFPSRecalculationToThisFPS(int fps);
-void processInputs(int currentFPS, int newFPSValue, bool fpsInRange, CPUOdroid * cpu, GPUOdroid * gpu);
-void runThisRegularly(CPUOdroid * cpu, GPUOdroid * gpu);
+void processInputs(int currentFPS, int newFPSValue, bool fpsInRange, CPU * cpu, GPU * gpu);
+void runThisRegularly(CPU * cpu, GPU * gpu);
 int findLowestFreqPositionThatMeetsThisCost(double costToMeet, vector<long> availableFrequencies, float factor);
-void makeCPUMeetThisFPS(int targetFPS, int currentFPS, CPUOdroid * cpu);
-void makeGPUMeetThisFPS(int targetFPS, int currentFPS, GPUOdroid * gpu);
+void makeCPUMeetThisFPS(int targetFPS, int currentFPS, CPU * cpu);
+void makeGPUMeetThisFPS(int targetFPS, int currentFPS, GPU * gpu);
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_example_dvfs_DVFSNdk_startDVFS( JNIEnv* env, jobject thiz, jint fpsLowbound, jint fpsHighBound, jint slidingWindowLength, jboolean isPhoneNexus5){
-	__android_log_print(ANDROID_LOG_INFO, CLASSNAME, "lowbound: %d, highbound: %d, slidingWindow: %d, isPhoneNexus5: %d",  fpsLowbound,  fpsHighBound, slidingWindowLength, isPhoneNexus5);
-	startDVFS(fpsLowbound, fpsHighBound, slidingWindowLength,  isPhoneNexus5);
+Java_com_example_dvfs_DVFSNdk_startDVFS( JNIEnv* env, jobject thiz, jint fpsLowbound, jint fpsHighBound, jint slidingWindowLength){
+	__android_log_print(ANDROID_LOG_INFO, CLASSNAME, "lowbound: %d, highbound: %d, slidingWindow: %d",  fpsLowbound,  fpsHighBound, slidingWindowLength);
+	startDVFS(fpsLowbound, fpsHighBound, slidingWindowLength);
 }
 
 extern "C"
@@ -47,12 +50,13 @@ Java_com_example_dvfs_DVFSNdk_stopDVFS( JNIEnv* env, jobject thiz ){
 
 
 
-void startDVFS(int _fpsLowBound, int _fpsHighBound, int _slidingWindowLength, bool _isPhoneNexus5){
+void startDVFS(int _fpsLowBound, int _fpsHighBound, int _slidingWindowLength){
 
 	fpsLowBound = _fpsLowBound;
 	fpsHighBound = _fpsHighBound;
 	slidingWindowLength = _slidingWindowLength;
 	dvfsInProgress = true;
+
 	pthread_create(&threadTask, NULL, threadFunction, NULL);
 
 
@@ -70,9 +74,22 @@ int timeval_subtract(struct timeval *result, struct timeval *t2, struct timeval 
 
 void * threadFunction(void *arg){
 
+	__android_log_print(ANDROID_LOG_INFO, CLASSNAME, "Thread function start");
 	startShell();
-	CPUOdroid cpu;
-	GPUOdroid gpu;
+
+	__android_log_print(ANDROID_LOG_INFO, CLASSNAME, "Shell started");
+	CPU * cpu;
+	GPU * gpu;
+	__android_log_print(ANDROID_LOG_INFO, CLASSNAME, "After var declaration");
+	if(isPhoneNexus5()){
+		cpu = new CPUNexus5();
+		gpu = new GPUNexus5();
+		__android_log_print(ANDROID_LOG_INFO, CLASSNAME, "Model %s", "Nexus 5");
+	} else {
+		cpu = new CPUOdroid();
+		gpu = new GPUOdroid();
+		__android_log_print(ANDROID_LOG_INFO, CLASSNAME, "Model %s", "Not Nexus 5");
+	}
 
 	struct timeval tvBegin, tvEnd, tvDiff;
 
@@ -80,7 +97,7 @@ void * threadFunction(void *arg){
 
 		gettimeofday(&tvBegin, NULL);
 
-		runThisRegularly(&cpu, &gpu);
+		runThisRegularly(cpu, gpu);
 
 		gettimeofday(&tvEnd, NULL);
 
@@ -96,6 +113,9 @@ void * threadFunction(void *arg){
 
 
 	}
+
+	free(gpu);
+	free(cpu);
 
 	stopShell();
 	return NULL;
@@ -116,7 +136,7 @@ int shouldPursueFPSRecalculationToThisFPS(int fps){
 
 }
 
-void runThisRegularly(CPUOdroid * cpu, GPUOdroid * gpu){
+void runThisRegularly(CPU * cpu, GPU * gpu){
 
 	int currentFPS = gpu->getFPS();
 	__android_log_print(ANDROID_LOG_INFO, CLASSNAME, "FPS %d", currentFPS);
@@ -149,7 +169,7 @@ int findLowestFreqPositionThatMeetsThisCost(double costToMeet, vector<long> avai
 }
 
 
-void makeCPUMeetThisFPS(int targetFPS, int currentFPS, CPUOdroid * cpu){
+void makeCPUMeetThisFPS(int targetFPS, int currentFPS, CPU * cpu){
 	__android_log_print(ANDROID_LOG_INFO, CLASSNAME, "CPU meet this FPS: %d", targetFPS);
 
 	int currentCPUFreqPosition = cpu->getCpuFreqPosition();
@@ -186,7 +206,7 @@ void makeCPUMeetThisFPS(int targetFPS, int currentFPS, CPUOdroid * cpu){
 	__android_log_print(ANDROID_LOG_INFO, CLASSNAME, "New CPU Freq Pos: %d", newCPUFreqPosition);
 }
 
-void makeGPUMeetThisFPS(int targetFPS, int currentFPS, GPUOdroid * gpu){
+void makeGPUMeetThisFPS(int targetFPS, int currentFPS, GPU * gpu){
 	__android_log_print(ANDROID_LOG_INFO, CLASSNAME, "GPU meet this FPS: %d", targetFPS);
 
 	int currentGPUFreqPosition = gpu->getGpuFreqPosition();
@@ -210,7 +230,7 @@ void makeGPUMeetThisFPS(int targetFPS, int currentFPS, GPUOdroid * gpu){
 	__android_log_print(ANDROID_LOG_INFO, CLASSNAME, "New GPU Freq Pos: %d", newGPUFreqPosition);
 }
 
-void processInputs(int currentFPS, int newFPSValue, bool fpsInRange, CPUOdroid * cpu, GPUOdroid * gpu){
+void processInputs(int currentFPS, int newFPSValue, bool fpsInRange, CPU * cpu, GPU * gpu){
 
 
 	__android_log_print(ANDROID_LOG_INFO, CLASSNAME, "Current FPS: %d, target FPS: %d", currentFPS, newFPSValue);

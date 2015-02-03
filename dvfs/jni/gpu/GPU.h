@@ -21,12 +21,12 @@ public:
 	vector<long> getGPUFreqs(){ return gpuFreqs; };
 	int getGpuFreqPosition(){ return gpuFreqPosition; };
 	int getFPS();
+	virtual void setGPUFreq(int position);
 
 protected:
 	vector<long> gpuFreqs;
 	int gpuFreqPosition;;
 	virtual void initGPUFreqValues();
-	virtual void setGPUFreq(int position);
 };
 
 #endif /* GPU_GPU_H_ */
