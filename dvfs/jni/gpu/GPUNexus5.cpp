@@ -37,6 +37,7 @@ void GPUNexus5::initGPUFreqValues(){
 
 	freqString = strtok (freqLongString," ");
 	currentFreq = atol(freqString);
+	__android_log_print(ANDROID_LOG_INFO, CLASSNAME, "GPU Freqs used %ld", currentFreq);
 	gpuFreqs.push_back(currentFreq);
 
 

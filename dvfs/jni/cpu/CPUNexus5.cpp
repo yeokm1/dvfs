@@ -43,6 +43,7 @@ void CPUNexus5::initCPUFreqValues(){
 
 	if(LOWEST_FREQ_POSITION == 0){
 		currentFreq = atol(freqString);
+		__android_log_print(ANDROID_LOG_INFO, CLASSNAME, "CPU Freqs used %ld", currentFreq);
 		cpuFreqs.push_back(currentFreq);
 	}
 
