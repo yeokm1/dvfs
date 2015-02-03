@@ -82,13 +82,13 @@ void * threadFunction(void *arg){
 	GPU * gpu;
 	__android_log_print(ANDROID_LOG_INFO, CLASSNAME, "After var declaration");
 	if(isPhoneNexus5()){
+		__android_log_print(ANDROID_LOG_INFO, CLASSNAME, "Model %s", "Nexus 5");
 		cpu = new CPUNexus5();
 		gpu = new GPUNexus5();
-		__android_log_print(ANDROID_LOG_INFO, CLASSNAME, "Model %s", "Nexus 5");
 	} else {
+		__android_log_print(ANDROID_LOG_INFO, CLASSNAME, "Model %s", "Not Nexus 5");
 		cpu = new CPUOdroid();
 		gpu = new GPUOdroid();
-		__android_log_print(ANDROID_LOG_INFO, CLASSNAME, "Model %s", "Not Nexus 5");
 	}
 
 	struct timeval tvBegin, tvEnd, tvDiff;
