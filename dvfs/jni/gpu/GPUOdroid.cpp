@@ -18,7 +18,6 @@
 #define FILE_GPU_MAX_FREQ "/sys/devices/platform/pvrsrvkm.0/sgx_dvfs_max_lock"
 #define FILE_GPU_AVAILABLE_FREQS "/sys/devices/platform/pvrsrvkm.0/sgx_dvfs_table"
 
-#define FILE_BUFFER_SIZE 300
 #define CLASSNAME "GPUOdroid"
 
 GPUOdroid::GPUOdroid() {

@@ -10,6 +10,7 @@
 #include <vector>
 
 #define NO_FPS_CALCULATED -1
+#define FILE_BUFFER_SIZE 300
 
 using std::vector;
 
