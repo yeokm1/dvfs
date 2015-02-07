@@ -29,4 +29,5 @@ void GPU::setGPUFreq(int position){
 
 int GPU::getFPS(){
 	//Do nothing here
+	return NO_FPS_CALCULATED;
 }
