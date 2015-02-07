@@ -15,6 +15,7 @@ public:
 	GPUNexus5();
 	virtual ~GPUNexus5();
 	void setGPUFreq(int position);
+	int getFPS();
 
 protected:
 	void initGPUFreqValues();

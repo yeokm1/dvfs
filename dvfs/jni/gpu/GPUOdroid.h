@@ -15,6 +15,7 @@ public:
 	GPUOdroid();
 	virtual ~GPUOdroid();
 	void setGPUFreq(int position);
+	int getFPS();
 
 protected:
 	void initGPUFreqValues();

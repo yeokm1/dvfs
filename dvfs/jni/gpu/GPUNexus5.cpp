@@ -7,6 +7,7 @@
 
 #include <gpu/GPUNexus5.h>
 #include <android/log.h>
+#include <stdio.h>
 #include "IOStuff.h"
 
 #define POWER_SCALE_POLICY "/sys/class/kgsl/kgsl-3d0/pwrscale/policy"
@@ -14,6 +15,8 @@
 #define FILE_GPU_AVAILABLE_FREQS "/sys/class/kgsl/kgsl-3d0/gpu_available_frequencies"
 
 #define CLASSNAME "GPUNexus5"
+
+#define FPS_COMMAND "su -c dumpsys SurfaceFlinger --latency SurfaceView"
 
 GPUNexus5::GPUNexus5() {
 	initGPUFreqValues();
@@ -58,4 +61,65 @@ void GPUNexus5::setGPUFreq(int position){
 void GPUNexus5::setToNoGPUPolicy(){
 	writeStringToFile(POWER_SCALE_POLICY, "none");
 }
+
+
+int GPUNexus5::getFPS(){
+	FILE *pp = popen(FPS_COMMAND, "r");
+
+	char line[FPS_RESULT_LINE_LENGTH];
+	//Ignore the first line
+	fgets(line, sizeof(line), pp);
+
+	if(strlen(line) == 0){
+		pclose(pp);
+		return NO_FPS_CALCULATED;
+	}
+
+
+	char *finishFrameTime;
+	stack<long long> values;
+
+	while(fgets(line, sizeof (line), pp) != NULL){
+		//Ignore the first two values
+		strtok(line, "\t");
+		strtok(NULL, "\t");
+		finishFrameTime = strtok(NULL, "\t");
+
+		if(finishFrameTime != NULL){
+			long long parsed = atoll(finishFrameTime);
+			values.push(parsed);
+		}
+
+	}
+
+	pclose(pp);
+
+	//Final check to ensure there is data collected in the first place
+	if(values.size() == 0){
+		return NO_FPS_CALCULATED;
+	}
+
+	int frameCount = 0;
+	int fps = 0;
+	long long lastFrameFinishedTime = values.top();
+
+	while(!values.empty()){
+		long long currentValue = values.top();
+		values.pop();
+
+		if ((lastFrameFinishedTime - currentValue) <= FPS_INTERVAL_NANOS)	{
+			frameCount++;
+		}
+	}
+
+	if(frameCount == 1){
+		return NO_FPS_CALCULATED;
+	}
+
+
+	//Cap to Max FPS
+	return (frameCount <= MAX_FPS) ? frameCount : MAX_FPS;
+}
+
+
 
