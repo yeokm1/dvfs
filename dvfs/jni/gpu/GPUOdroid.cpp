@@ -19,6 +19,7 @@
 #define FILE_GPU_AVAILABLE_FREQS "/sys/devices/platform/pvrsrvkm.0/sgx_dvfs_table"
 
 #define FPS_COMMAND "dumpsys SurfaceFlinger --latency SurfaceView && echo e"
+#define UTIL_RESULT_LENGTH 50
 
 #define CLASSNAME "GPUOdroid"
 
@@ -148,4 +149,15 @@ int GPUOdroid::getFPS(){
 
 	//Cap to Max FPS
 	return (frameCount <= MAX_FPS) ? frameCount : MAX_FPS;
+}
+
+float GPUOdroid::getUtilisation(){
+
+	char buff[UTIL_RESULT_LENGTH];
+	getStringFromFile(FILE_GPU_UTIL, buff, UTIL_RESULT_LENGTH);
+
+	float numOutput = atof(buff);
+	numOutput /= 2.56;
+
+	return numOutput;
 }

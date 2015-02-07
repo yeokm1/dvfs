@@ -31,3 +31,7 @@ int GPU::getFPS(){
 	//Do nothing here
 	return NO_FPS_CALCULATED;
 }
+
+float GPU::getUtilisation(){
+	return 0;
+}

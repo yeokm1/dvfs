@@ -16,6 +16,7 @@ public:
 	virtual ~GPUOdroid();
 	void setGPUFreq(int position);
 	int getFPS();
+	float getUtilisation();
 
 protected:
 	void initGPUFreqValues();
