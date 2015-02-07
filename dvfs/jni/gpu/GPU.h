@@ -23,6 +23,8 @@ using std::stack;
 #define FPS_INTERVAL_NANOS 1000000000
 #define MAX_FPS 60
 
+#define LINES_IN_DUMPSYS_TO_IGNORE 60
+
 using std::vector;
 
 class GPU {

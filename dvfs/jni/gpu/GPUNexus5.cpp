@@ -79,7 +79,14 @@ int GPUNexus5::getFPS(){
 	char *finishFrameTime;
 	stack<long long> values;
 
+	int linesEncountered = 0;
 	while(fgets(line, sizeof (line), pp) != NULL){
+    	linesEncountered++;
+
+    	if(linesEncountered < LINES_IN_DUMPSYS_TO_IGNORE){
+    		continue;
+    	}
+
 		//Ignore the first two values
 		strtok(line, "\t");
 		strtok(NULL, "\t");

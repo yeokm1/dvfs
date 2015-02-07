@@ -98,11 +98,18 @@ int GPUOdroid::getFPS(){
 
 	stack<long long> values;
 
+
+	int linesEncountered = 0;
     while (true) {
 
+    	linesEncountered++;
     	std::getline(*proc, intermediate);
     	if(intermediate.compare(FPS_COMMAND_ENDING) == 0){
     		break;
+    	}
+
+    	if(linesEncountered < LINES_IN_DUMPSYS_TO_IGNORE){
+    		continue;
     	}
 
 		const char * lineConst = intermediate.c_str();
