@@ -176,7 +176,7 @@ void makeCPUMeetThisFPS(int targetFPS, int currentFPS, CPU * cpu){
 
 	vector<long> cpuFreqs = cpu->getCPUFreqs();
 
-	double cpuUtil = cpu->getUtilisationOfHighestCore();
+	float cpuUtil = cpu->getUtilisationOfHighestCore();
 	__android_log_print(ANDROID_LOG_INFO, CLASSNAME, "CPU Highest Util %f", cpuUtil);
 
 
