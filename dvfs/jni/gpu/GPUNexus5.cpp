@@ -13,6 +13,7 @@
 #define POWER_SCALE_POLICY "/sys/class/kgsl/kgsl-3d0/pwrscale/policy"
 #define FILE_GPU_MAX_FREQ "/sys/class/kgsl/kgsl-3d0/max_gpuclk"
 #define FILE_GPU_AVAILABLE_FREQS "/sys/class/kgsl/kgsl-3d0/gpu_available_frequencies"
+#define FILE_GPU_UTIL "/sys/class/kgsl/kgsl-3d0/gpubusy"
 
 #define CLASSNAME "GPUNexus5"
 
@@ -126,6 +127,22 @@ int GPUNexus5::getFPS(){
 
 	//Cap to Max FPS
 	return (frameCount <= MAX_FPS) ? frameCount : MAX_FPS;
+}
+
+float GPUNexus5::getUtilisation(){
+	FILE *filePtr = fopen(FILE_GPU_UTIL, "r");
+	int busyCycles;
+	int totalCycles;
+
+	fscanf(filePtr, "%d %d",&busyCycles, &totalCycles);
+	fclose(filePtr);
+
+	if(totalCycles == 0){
+		return 0;
+	} else {
+		float util = (((float) busyCycles) / totalCycles) * 100;
+		return util;
+	}
 }
 
 
