@@ -18,7 +18,7 @@
 #define FILE_GPU_MAX_FREQ "/sys/devices/platform/pvrsrvkm.0/sgx_dvfs_max_lock"
 #define FILE_GPU_AVAILABLE_FREQS "/sys/devices/platform/pvrsrvkm.0/sgx_dvfs_table"
 
-#define FPS_COMMAND "dumpsys SurfaceFlinger --latency SurfaceView && echo e"
+#define FPS_COMMAND "dumpsys SurfaceFlinger --latency SurfaceView"
 #define UTIL_RESULT_LENGTH 50
 
 #define CLASSNAME "GPUOdroid"
@@ -80,43 +80,30 @@ void GPUOdroid::setGPUFreq(int position){
 
 
 int GPUOdroid::getFPS(){
+	FILE *pp = popen(FPS_COMMAND, "r");
 
-	__android_log_print(ANDROID_LOG_INFO, CLASSNAME, "Get FPS start");
+	char line[FPS_RESULT_LINE_LENGTH];
+	//Ignore the first line
+	fgets(line, sizeof(line), pp);
 
-
-	redi::pstream * proc = getShellInstance();
-	* proc << FPS_COMMAND << std::endl;
-
-	string intermediate;
-	char *finishFrameTime;
-
-	//Grab the first line. It is usually in the form 16666... and useless
-	std::getline(*proc, intermediate);
-
-	if(intermediate.compare(FPS_COMMAND_ENDING) == 0){
+	if(strlen(line) == 0){
+		pclose(pp);
 		return NO_FPS_CALCULATED;
 	}
 
+
+	char *finishFrameTime;
 	stack<long long> values;
 
-
 	int linesEncountered = 0;
-    while (true) {
-
+	while(fgets(line, sizeof (line), pp) != NULL){
     	linesEncountered++;
-    	std::getline(*proc, intermediate);
-    	if(intermediate.compare(FPS_COMMAND_ENDING) == 0){
-    		break;
-    	}
 
     	if(linesEncountered < LINES_IN_DUMPSYS_TO_IGNORE){
     		continue;
     	}
 
-		const char * lineConst = intermediate.c_str();
-		char line[intermediate.length()];
-		std::strcpy(line, lineConst);
-
+		//Ignore the first two values
 		strtok(line, "\t");
 		strtok(NULL, "\t");
 		finishFrameTime = strtok(NULL, "\t");
@@ -126,12 +113,14 @@ int GPUOdroid::getFPS(){
 			values.push(parsed);
 		}
 
-    }
+	}
 
+	pclose(pp);
+
+	//Final check to ensure there is data collected in the first place
 	if(values.size() == 0){
 		return NO_FPS_CALCULATED;
 	}
-
 
 	int frameCount = 0;
 	long long lastFrameFinishedTime = values.top();
@@ -143,6 +132,10 @@ int GPUOdroid::getFPS(){
 		if ((lastFrameFinishedTime - currentValue) <= FPS_INTERVAL_NANOS)	{
 			frameCount++;
 		}
+	}
+
+	if(frameCount == 1){
+		return NO_FPS_CALCULATED;
 	}
 
 

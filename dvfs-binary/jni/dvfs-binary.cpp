@@ -82,9 +82,7 @@ int timeval_subtract(struct timeval *result, struct timeval *t2, struct timeval 
 void * threadFunction(void *arg){
 
 	printf("Thread function start\n");
-	startShell();
 
-	printf("Shell started\n");
 	CPU * cpu;
 	GPU * gpu;
 	if(isPhoneNexus5()){
@@ -123,7 +121,6 @@ void * threadFunction(void *arg){
 	free(gpu);
 	free(cpu);
 
-	stopShell();
 	return NULL;
 
 }

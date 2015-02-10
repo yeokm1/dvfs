@@ -4,39 +4,21 @@
 #include <sys/stat.h>
 #include <android/log.h>
 #include <unistd.h>
-#include <limits>
-#include <sstream>
-#include "pstream.h"
 
 #define TEXT_BUFFER_SIZE 20
 #define COMMAND_LENGTH 200
 #define CLASSNAME "IOStuff"
 
-
-redi::pstream * proc;
-
-redi::pstream * getShellInstance(){
-	return proc;
-}
-
-void startShell(){
-	proc = new redi::pstream("su", redi::pstreams::pstdout | redi::pstreams::pstdin);
-}
-
-void stopShell(){
-	free(proc);
-}
-
 void writeStringToFile(const char * filePath, const char * value){
-	char buff[COMMAND_LENGTH];
-	sprintf(buff,"echo %s > %s", value, filePath );
-	* proc << buff << std::endl;
+    FILE  *filePtr = fopen(filePath, "w");
+    fputs(value, filePtr);
+    fclose(filePtr);
 }
 
 void writeValueToFile(const char * filePath, long value){
-	char buff[COMMAND_LENGTH];
-	sprintf(buff,"echo %ld > %s", value, filePath );
-	* proc << buff << std::endl;
+    FILE  *filePtr = fopen(filePath, "w");
+    fprintf(filePtr, "%ld", value);
+    fclose(filePtr);
 }
 
 float getValueFromFile(const char * filename){

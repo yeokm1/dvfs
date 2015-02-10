@@ -7,6 +7,7 @@
 
 #include <cpu/CPUNexus5.h>
 #include <android/log.h>
+#include <stdlib.h>
 #include "IOStuff.h"
 
 #define FILE_CPU_AVAILABLE_FREQS "/sys/devices/system/cpu/cpu0/cpufreq/scaling_available_frequencies"
