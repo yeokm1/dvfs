@@ -52,14 +52,13 @@ void CPU::getCPUUtil(float * util){
 	getStringFromFile(FILE_CPU_UTIL, utilBuffString, SIZE_PROC_STAT_BUFF);
 
 	int initialOffset = 10; //The initial offset is to skip the all cores fields
-	int subsequentOffset = 10;
 
-	char * valueString = strtok(utilBuffString, " ");
+	strtok(utilBuffString, " ");
 
 	int currentOffset = 1;
 
 	for(; currentOffset < initialOffset; currentOffset++){
-		valueString = strtok (NULL, " ");
+		strtok (NULL, " ");
 	}
 
 	for(int coreNumber = 0; coreNumber < NUM_CORES; coreNumber++){

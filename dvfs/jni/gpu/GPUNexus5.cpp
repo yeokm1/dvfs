@@ -108,7 +108,6 @@ int GPUNexus5::getFPS(){
 	}
 
 	int frameCount = 0;
-	int fps = 0;
 	long long lastFrameFinishedTime = values.top();
 
 	while(!values.empty()){
