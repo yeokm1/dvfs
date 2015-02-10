@@ -157,7 +157,7 @@ void runThisRegularly(CPU * cpu, GPU * gpu){
 
 int findLowestFreqPositionThatMeetsThisCost(double costToMeet, vector<long> availableFrequencies, float factor){
 
-	for(int position = 0; position < availableFrequencies.size(); position++){
+	for(unsigned int position = 0; position < availableFrequencies.size(); position++){
 		long chosenFreq = availableFrequencies[position];
 		double calculatedCost = chosenFreq * factor;
 		if(calculatedCost >= costToMeet){
