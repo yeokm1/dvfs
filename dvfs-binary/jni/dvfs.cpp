@@ -1,4 +1,4 @@
-#include <stdio.h>
+#include <jni.h>
 #include <stdlib.h>
 #include <time.h>
 #include <unistd.h>
@@ -34,23 +34,14 @@ void makeCPUMeetThisFPS(int targetFPS, int currentFPS, CPU * cpu);
 void makeGPUMeetThisFPS(int targetFPS, int currentFPS, GPU * gpu);
 
 
-int main( int argc, char* argv[]){
-    printf("Hello, World!");
-    startDVFS(30, 35);
-    return 0;
-}
-
-
-
-
 void startDVFS(int _fpsLowBound, int _fpsHighBound){
 
 	fpsLowBound = _fpsLowBound;
 	fpsHighBound = _fpsHighBound;
 	dvfsInProgress = true;
 
-	//pthread_create(&threadTask, NULL, threadFunction, NULL);
-	threadFunction(NULL);
+	pthread_create(&threadTask, NULL, threadFunction, NULL);
+
 
 }
 
@@ -66,19 +57,19 @@ int timeval_subtract(struct timeval *result, struct timeval *t2, struct timeval 
 
 void * threadFunction(void *arg){
 
-	puts("Thread function start");
+	__android_log_print(ANDROID_LOG_INFO, CLASSNAME, "Thread function start");
 	startShell();
 
-	puts("Shell started");
+	__android_log_print(ANDROID_LOG_INFO, CLASSNAME, "Shell started");
 	CPU * cpu;
 	GPU * gpu;
-	puts("After var declaration");
+	__android_log_print(ANDROID_LOG_INFO, CLASSNAME, "After var declaration");
 	if(isPhoneNexus5()){
-		puts("Model Nexus 5");
+		__android_log_print(ANDROID_LOG_INFO, CLASSNAME, "Model %s", "Nexus 5");
 		cpu = new CPUNexus5();
 		gpu = new GPUNexus5();
 	} else {
-		puts("Model not Nexus 5");
+		__android_log_print(ANDROID_LOG_INFO, CLASSNAME, "Model %s", "Not Nexus 5");
 		cpu = new CPUOdroid();
 		gpu = new GPUOdroid();
 	}
@@ -131,7 +122,7 @@ int shouldPursueFPSRecalculationToThisFPS(int fps){
 void runThisRegularly(CPU * cpu, GPU * gpu){
 
 	int currentFPS = gpu->getFPS();
-	printf("FPS %d\n", currentFPS);
+	__android_log_print(ANDROID_LOG_INFO, CLASSNAME, "FPS %d", currentFPS);
 
 	if(currentFPS != NO_FPS_CALCULATED){
 
@@ -162,14 +153,14 @@ int findLowestFreqPositionThatMeetsThisCost(double costToMeet, vector<long> avai
 
 
 void makeCPUMeetThisFPS(int targetFPS, int currentFPS, CPU * cpu){
-	printf("CPU meet this FPS: %d\n", targetFPS);
+	__android_log_print(ANDROID_LOG_INFO, CLASSNAME, "CPU meet this FPS: %d", targetFPS);
 
 	int currentCPUFreqPosition = cpu->getCpuFreqPosition();
 
 	vector<long> cpuFreqs = cpu->getCPUFreqs();
 
 	float cpuUtil = cpu->getUtilisationOfHighestCore();
-	printf("CPU Highest Util %f\n", cpuUtil);
+	__android_log_print(ANDROID_LOG_INFO, CLASSNAME, "CPU Highest Util %f", cpuUtil);
 
 
 	long currentCPUFrequency = cpuFreqs[currentCPUFreqPosition];
@@ -195,11 +186,11 @@ void makeCPUMeetThisFPS(int targetFPS, int currentFPS, CPU * cpu){
 		cpu->setCPUFreq(newCPUFreqPosition);
 	}
 
-	printf("New CPU Freq Pos: %d\n", newCPUFreqPosition);
+	__android_log_print(ANDROID_LOG_INFO, CLASSNAME, "New CPU Freq Pos: %d", newCPUFreqPosition);
 }
 
 void makeGPUMeetThisFPS(int targetFPS, int currentFPS, GPU * gpu){
-	printf("GPU meet this FPS: %d\n", targetFPS);
+	__android_log_print(ANDROID_LOG_INFO, CLASSNAME, "GPU meet this FPS: %d", targetFPS);
 
 	int currentGPUFreqPosition = gpu->getGpuFreqPosition();
 
@@ -219,13 +210,13 @@ void makeGPUMeetThisFPS(int targetFPS, int currentFPS, GPU * gpu){
 		gpu->setGPUFreq(newGPUFreqPosition);
 	}
 
-	printf("New GPU Freq Pos: %d\n", newGPUFreqPosition);
+	__android_log_print(ANDROID_LOG_INFO, CLASSNAME, "New GPU Freq Pos: %d", newGPUFreqPosition);
 }
 
 void processInputs(int currentFPS, int newFPSValue, bool fpsInRange, CPU * cpu, GPU * gpu){
 
 
-	printf("Current FPS: %d, target FPS: %d\n", currentFPS, newFPSValue);
+	__android_log_print(ANDROID_LOG_INFO, CLASSNAME, "Current FPS: %d, target FPS: %d", currentFPS, newFPSValue);
 	makeCPUMeetThisFPS(newFPSValue, currentFPS, cpu);
 
 	if(fpsInRange){
@@ -241,3 +232,9 @@ void processInputs(int currentFPS, int newFPSValue, bool fpsInRange, CPU * cpu, 
 
 
 }
+
+
+
+
+
+
