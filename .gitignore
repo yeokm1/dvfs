@@ -28,3 +28,5 @@ proguard/
 *.log
 
 *.so
+/dvfs-binary/armeabi-v7a
+/dvfs-binary/obj
