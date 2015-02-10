@@ -35,8 +35,23 @@ void makeGPUMeetThisFPS(int targetFPS, int currentFPS, GPU * gpu);
 
 
 int main( int argc, char* argv[]){
-    printf("Hello, World!");
-    startDVFS(30, 35);
+	if(argc != 3){
+		printf("Not enough arguments\n");
+		return 1;
+	}
+
+	char * lowBoundStr = argv[1];
+	char * highBoundStr = argv[2];
+
+	int lowBound = atoi(lowBoundStr);
+	int highBound = atoi(highBoundStr);
+
+	if(lowBound > highBound){
+		printf("Low Bound cannot be higher that High bound\n");
+		return 1;
+	}
+
+    startDVFS(lowBound, highBound);
     return 0;
 }
 
@@ -66,19 +81,18 @@ int timeval_subtract(struct timeval *result, struct timeval *t2, struct timeval 
 
 void * threadFunction(void *arg){
 
-	puts("Thread function start");
+	printf("Thread function start\n");
 	startShell();
 
-	puts("Shell started");
+	printf("Shell started\n");
 	CPU * cpu;
 	GPU * gpu;
-	puts("After var declaration");
 	if(isPhoneNexus5()){
-		puts("Model Nexus 5");
+		printf("Model Nexus 5\n");
 		cpu = new CPUNexus5();
 		gpu = new GPUNexus5();
 	} else {
-		puts("Model not Nexus 5");
+		puts("Model not Nexus 5\n");
 		cpu = new CPUOdroid();
 		gpu = new GPUOdroid();
 	}
