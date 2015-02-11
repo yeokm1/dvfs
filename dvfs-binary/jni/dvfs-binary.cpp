@@ -153,7 +153,10 @@ void runThisRegularly(CPU * cpu, GPU * gpu){
 	int currentFPS = gpu->getFPS();
 	D(printf("FPS %d\n", currentFPS));
 
-	if(currentFPS != NO_FPS_CALCULATED){
+	if(currentFPS == NO_FPS_CALCULATED){
+		//Recalculate GPU immediately on next try if cannot get FPS
+		currentSlidingWindowPosition = SLIDING_WINDOW_LENGTH;
+	} else {
 
 		int newValueFPS = shouldPursueFPSRecalculationToThisFPS(currentFPS);
 
