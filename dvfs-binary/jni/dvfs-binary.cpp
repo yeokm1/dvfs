@@ -11,6 +11,16 @@
 #include "IOStuff.h"
 #include "RetrieveModel.h"
 
+
+#define DEBUG
+
+#ifdef DEBUG
+#  define D(x) x
+#else
+#  define D(x)
+#endif
+
+
 #define CLASSNAME "DVFS-ndk"
 #define POLL_RATE_IN_MICROSECOND 1000000  //1 second
 #define DO_NOT_PURSUE_FPS_VALUE -1
@@ -81,16 +91,16 @@ int timeval_subtract(struct timeval *result, struct timeval *t2, struct timeval 
 
 void * threadFunction(void *arg){
 
-	printf("Thread function start\n");
+	D(printf("Thread function start\n"));
 
 	CPU * cpu;
 	GPU * gpu;
 	if(isPhoneNexus5()){
-		printf("Model Nexus 5\n");
+		D(printf("Model Nexus 5\n"));
 		cpu = new CPUNexus5();
 		gpu = new GPUNexus5();
 	} else {
-		puts("Model not Nexus 5\n");
+		D(printf("Model not Nexus 5\n"));
 		cpu = new CPUOdroid();
 		gpu = new GPUOdroid();
 	}
@@ -142,7 +152,7 @@ int shouldPursueFPSRecalculationToThisFPS(int fps){
 void runThisRegularly(CPU * cpu, GPU * gpu){
 
 	int currentFPS = gpu->getFPS();
-	printf("FPS %d\n", currentFPS);
+	D(printf("FPS %d\n", currentFPS));
 
 	if(currentFPS != NO_FPS_CALCULATED){
 
@@ -173,14 +183,14 @@ int findLowestFreqPositionThatMeetsThisCost(double costToMeet, vector<long> avai
 
 
 void makeCPUMeetThisFPS(int targetFPS, int currentFPS, CPU * cpu){
-	printf("CPU meet this FPS: %d\n", targetFPS);
+	D(printf("CPU meet this FPS: %d\n", targetFPS));
 
 	int currentCPUFreqPosition = cpu->getCpuFreqPosition();
 
 	vector<long> cpuFreqs = cpu->getCPUFreqs();
 
 	float cpuUtil = cpu->getUtilisationOfHighestCore();
-	printf("CPU Highest Util %f\n", cpuUtil);
+	D(printf("CPU Highest Util %f\n", cpuUtil));
 
 
 	long currentCPUFrequency = cpuFreqs[currentCPUFreqPosition];
@@ -206,11 +216,11 @@ void makeCPUMeetThisFPS(int targetFPS, int currentFPS, CPU * cpu){
 		cpu->setCPUFreq(newCPUFreqPosition);
 	}
 
-	printf("New CPU Freq Pos: %d\n", newCPUFreqPosition);
+	D(printf("New CPU Freq Pos: %d\n", newCPUFreqPosition));
 }
 
 void makeGPUMeetThisFPS(int targetFPS, int currentFPS, GPU * gpu){
-	printf("GPU meet this FPS: %d\n", targetFPS);
+	D(printf("GPU meet this FPS: %d\n", targetFPS));
 
 	int currentGPUFreqPosition = gpu->getGpuFreqPosition();
 
@@ -230,13 +240,13 @@ void makeGPUMeetThisFPS(int targetFPS, int currentFPS, GPU * gpu){
 		gpu->setGPUFreq(newGPUFreqPosition);
 	}
 
-	printf("New GPU Freq Pos: %d\n", newGPUFreqPosition);
+	D(printf("New GPU Freq Pos: %d\n", newGPUFreqPosition));
 }
 
 void processInputs(int currentFPS, int newFPSValue, bool fpsInRange, CPU * cpu, GPU * gpu){
 
 
-	printf("Current FPS: %d, target FPS: %d\n", currentFPS, newFPSValue);
+	D(printf("Current FPS: %d, target FPS: %d\n", currentFPS, newFPSValue));
 	makeCPUMeetThisFPS(newFPSValue, currentFPS, cpu);
 
 	if(fpsInRange){
