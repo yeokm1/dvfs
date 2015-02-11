@@ -6,7 +6,6 @@
  */
 
 #include <gpu/GPU.h>
-#include <android/log.h>
 #include <IOStuff.h>
 
 #define CLASSNAME "GPU"

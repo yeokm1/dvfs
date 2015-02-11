@@ -8,7 +8,6 @@
 #include <gpu/GPUOdroid.h>
 #include <cstdlib>
 #include <stack>
-#include <android/log.h>
 #include "IOStuff.h"
 
 
@@ -35,8 +34,6 @@ void GPUOdroid::initGPUFreqValues(){
 	char freqLongString[FILE_BUFFER_SIZE];
 
 	getStringFromFileByCat(FILE_GPU_AVAILABLE_FREQS, freqLongString, FILE_BUFFER_SIZE);
-
-	__android_log_print(ANDROID_LOG_INFO, CLASSNAME, "GPU Freqs available: %s", freqLongString);
 
 	char * freqString;
 

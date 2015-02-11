@@ -3,7 +3,6 @@
 #include <time.h>
 #include <unistd.h>
 #include <pthread.h>
-#include <android/log.h>
 #include "cpu/CPUOdroid.h"
 #include "cpu/CPUNexus5.h"
 #include "gpu/GPUOdroid.h"

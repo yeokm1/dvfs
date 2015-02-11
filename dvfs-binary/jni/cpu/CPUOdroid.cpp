@@ -7,7 +7,6 @@
 
 #include <cstdlib>
 #include <stack>
-#include <android/log.h>
 #include "CPUOdroid.h"
 #include "IOStuff.h"
 
@@ -18,7 +17,6 @@
 #define CLASSNAME "CPUOdroid"
 
 CPUOdroid::CPUOdroid(){
-	__android_log_print(ANDROID_LOG_INFO, CLASSNAME, "CPUOdroid Start");
 
 	initCPUFreqValues();
 	setCPUFreq(0);
@@ -32,8 +30,6 @@ void CPUOdroid::initCPUFreqValues(){
 	char freqLongString[FILE_BUFFER_SIZE];
 
 	getStringFromFile(FILE_CPU_AVAILABLE_FREQS, freqLongString, FILE_BUFFER_SIZE);
-
-	__android_log_print(ANDROID_LOG_INFO, CLASSNAME, "CPU Freqs available: %s", freqLongString);
 
 	char * freqString;
 
@@ -64,7 +60,6 @@ void CPUOdroid::initCPUFreqValues(){
 		long freq = cpuFreqsStack.top();
 		cpuFreqsStack.pop();
 		if(i >= LOWEST_FREQ_POSITION && i <= HIGHEST_FREQ_POSITION){
-			__android_log_print(ANDROID_LOG_INFO, CLASSNAME, "CPU Freqs used %ld", freq);
 			cpuFreqs.push_back(freq);
 		}
 	}

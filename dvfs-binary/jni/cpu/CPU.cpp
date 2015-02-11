@@ -6,7 +6,6 @@
  */
 #include <cstdlib>
 #include <stdlib.h>
-#include <android/log.h>
 #include "IOStuff.h"
 #include "CPU.h"
 

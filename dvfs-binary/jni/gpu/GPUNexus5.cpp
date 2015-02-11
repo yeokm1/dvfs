@@ -6,7 +6,6 @@
  */
 
 #include <gpu/GPUNexus5.h>
-#include <android/log.h>
 #include <stdio.h>
 #include "IOStuff.h"
 
@@ -32,20 +31,16 @@ void GPUNexus5::initGPUFreqValues(){
 
 	getStringFromFileByCat(FILE_GPU_AVAILABLE_FREQS, freqLongString, FILE_BUFFER_SIZE);
 
-	__android_log_print(ANDROID_LOG_INFO, CLASSNAME, "GPU Freqs available: %s", freqLongString);
-
 	char * freqString;
 	long currentFreq;
 
 	freqString = strtok (freqLongString," ");
 	currentFreq = atol(freqString);
-	__android_log_print(ANDROID_LOG_INFO, CLASSNAME, "GPU Freqs used %ld", currentFreq);
 	gpuFreqs.push_back(currentFreq);
 
 
 	for(int i = 1; (freqString = strtok (NULL, " ")) != NULL; i++){
 		currentFreq = atol(freqString);
-		__android_log_print(ANDROID_LOG_INFO, CLASSNAME, "GPU Freqs used %ld", currentFreq);
 		gpuFreqs.push_back(currentFreq);
 	}
 

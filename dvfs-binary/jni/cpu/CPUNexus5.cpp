@@ -6,7 +6,6 @@
  */
 
 #include <cpu/CPUNexus5.h>
-#include <android/log.h>
 #include <stdlib.h>
 #include "IOStuff.h"
 
@@ -33,9 +32,6 @@ void CPUNexus5::initCPUFreqValues(){
 	char freqLongString[FILE_BUFFER_SIZE];
 	getStringFromFile(FILE_CPU_AVAILABLE_FREQS, freqLongString, FILE_BUFFER_SIZE);
 
-	__android_log_print(ANDROID_LOG_INFO, CLASSNAME, "CPU Freqs available: %s", freqLongString);
-
-
 	char * freqString;
 	long currentFreq;
 
@@ -44,14 +40,12 @@ void CPUNexus5::initCPUFreqValues(){
 
 	if(LOWEST_FREQ_POSITION == 0){
 		currentFreq = atol(freqString);
-		__android_log_print(ANDROID_LOG_INFO, CLASSNAME, "CPU Freqs used %ld", currentFreq);
 		cpuFreqs.push_back(currentFreq);
 	}
 
 	for(int i = 1; (freqString = strtok (NULL, " ")) != NULL; i++){
 		if(i >= LOWEST_FREQ_POSITION && i <= HIGHEST_FREQ_POSITION){
 			currentFreq = atol(freqString);
-			__android_log_print(ANDROID_LOG_INFO, CLASSNAME, "CPU Freqs used %ld", currentFreq);
 			cpuFreqs.push_back(currentFreq);
 		}
 	}
