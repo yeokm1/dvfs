@@ -38,6 +38,8 @@ int main( int argc, char* argv[]){
 
 
     dvfs->startDVFS();
+
+    free(dvfs);
     return 0;
 }
 
