@@ -23,6 +23,9 @@ CPU::CPU() {
 		prevCoreLoad[i] = 0;
 		prevCoreTotal[i] = 0;
 	}
+
+	prevLoad = 0;
+	prevTotal = 0;
 	setGovernorToUserspace();
 	cpuFreqPosition = 0;
 }
@@ -45,8 +48,6 @@ void CPU::initCPUFreqValues(){
 }
 
 void CPU::getCPUUtil(float * util){
-	//String[] toks = io.getAvailableOptionsFromFile(FILE_CPU_UTIL, false);
-
 	char utilBuffString[SIZE_PROC_STAT_BUFF];
 	getStringFromFile(FILE_CPU_UTIL, utilBuffString, SIZE_PROC_STAT_BUFF);
 
@@ -85,6 +86,33 @@ void CPU::getCPUUtil(float * util){
 		prevCoreTotal[coreNumber] = currentTotal;
 	}
 
+}
+
+float CPU::getAverageCPUUtilisation(){
+
+	char utilBuffString[SIZE_PROC_STAT_BUFF];
+	getStringFromFile(FILE_CPU_UTIL, utilBuffString, SIZE_PROC_STAT_BUFF);
+
+	strtok(utilBuffString, " ");
+
+	// From here http://www.linuxhowtos.org/System/procstat.htm
+	long user = atol(strtok (NULL, " "));
+	long nice = atol(strtok (NULL, " "));
+	long system = atol(strtok (NULL, " "));
+	long currentIdle = atol(strtok (NULL, " "));
+	long iowait = atol(strtok (NULL, " "));
+	long irq = atol(strtok (NULL, " "));
+	long softirq = atol(strtok (NULL, " "));
+
+	long currentLoad = user + nice + system + iowait + irq + softirq;
+	long currentTotal = currentLoad + currentIdle;
+
+	float util = (float) ((((double) (currentLoad - prevLoad)) / (currentTotal - prevTotal)) * 100);
+
+	prevLoad = currentLoad;
+	prevTotal = currentTotal;
+
+	return util;
 }
 
 float CPU::getUtilisationOfHighestCore(){

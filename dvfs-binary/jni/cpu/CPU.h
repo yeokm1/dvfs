@@ -26,9 +26,12 @@ public:
 	vector<long> getCPUFreqs(){ return cpuFreqs; };
 	int getCpuFreqPosition(){ return cpuFreqPosition; }
 	void getCPUUtil(float * util);
+	float getAverageCPUUtilisation();
 	float getUtilisationOfHighestCore();
 
 protected:
+	long prevLoad;
+	long prevTotal;
 	long prevCoreLoad[NUM_CORES];
 	long prevCoreTotal[NUM_CORES];
 	vector<long> cpuFreqs;
