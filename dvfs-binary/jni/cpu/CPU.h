@@ -15,6 +15,11 @@
 #define NUM_CORES 4
 #define FILE_BUFFER_SIZE 300
 
+#define ONDEMAND "ondemand"
+#define USERSPACE "userspace"
+
+#define FILE_CPU_SCALING_GOVERNER  "/sys/devices/system/cpu/cpu0/cpufreq/scaling_governor"
+
 using std::vector;
 
 class CPU {
@@ -28,6 +33,8 @@ public:
 	void getCPUUtil(float * util);
 	float getAverageCPUUtilisation();
 	float getUtilisationOfHighestCore();
+	virtual void setGovernorToUserspaceAndInit();
+	virtual void setGovernorToOndemandAndRevert();
 
 protected:
 	long prevLoad;
@@ -36,7 +43,6 @@ protected:
 	long prevCoreTotal[NUM_CORES];
 	vector<long> cpuFreqs;
 	int cpuFreqPosition;
-	void setGovernorToUserspace();
 	virtual void initCPUFreqValues();
 };
 

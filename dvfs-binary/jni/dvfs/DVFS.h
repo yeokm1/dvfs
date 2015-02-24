@@ -44,9 +44,13 @@ private:
 	int timeval_subtract(struct timeval *result, struct timeval *t2, struct timeval *t1);
 	bool isPhoneNexus5();
 	string getModel();
-	bool dvfsInProgress;
+	bool loopInProgress;
 
 protected:
+
+	void fpsDetected();
+	void noFpsDetected();
+	bool inGameMode;
 	CPU * cpu;
 	GPU * gpu;
 	int fpsLowBound;
@@ -55,6 +59,8 @@ protected:
 	virtual void regularRunner();
 	int findLowestFreqPositionThatMeetsThisCost(double costToMeet, vector<long> availableFrequencies, float factor);
 	int shouldPursueFPSRecalculationToThisFPS(int fps);
+	void readySystemForDVFS();
+	void setSystembackToDefault();
 };
 
 #endif /* DVFS_DVFS_H_ */

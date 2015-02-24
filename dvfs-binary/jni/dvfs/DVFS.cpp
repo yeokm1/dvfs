@@ -16,7 +16,8 @@ DVFS::DVFS(int fpsLowBound, int fpsHighBound) {
 	this->fpsLowBound = fpsLowBound;
 	this->fpsHighBound = fpsHighBound;
 	this->currentSlidingWindowPosition = 0;
-	this->dvfsInProgress = false;
+	this->loopInProgress = false;
+	this->inGameMode = false;
 
 	if(isPhoneNexus5()){
 		D(printf("Model Nexus 5\n"));
@@ -35,11 +36,16 @@ DVFS::~DVFS() {
 }
 
 void DVFS::startDVFS(){
-	dvfsInProgress = true;
+	loopInProgress = true;
 
 	struct timeval tvBegin, tvEnd, tvDiff;
 
-	while(dvfsInProgress){
+
+	//To force to ondemand intially
+	inGameMode = true;
+	noFpsDetected();
+
+	while(loopInProgress){
 
 		gettimeofday(&tvBegin, NULL);
 
@@ -63,7 +69,7 @@ void DVFS::startDVFS(){
 }
 
 void DVFS::stopDVFS(){
-	dvfsInProgress = false;
+	loopInProgress = false;
 }
 
 
@@ -122,5 +128,30 @@ string DVFS::getModel(){
 	char model_string[PROP_VALUE_MAX+1];
 	__system_property_get("ro.product.model", model_string);
 	return model_string;
+}
+
+void DVFS::readySystemForDVFS(){
+	cpu->setGovernorToUserspaceAndInit();
+	gpu->initGPUForModification();
+
+}
+void DVFS::setSystembackToDefault(){
+	cpu->setGovernorToOndemandAndRevert();
+	gpu->revertGPUToOriginal();
+
+}
+
+void DVFS::fpsDetected(){
+	if(!inGameMode){
+		readySystemForDVFS();
+		inGameMode = true;
+	}
+}
+
+void DVFS::noFpsDetected(){
+	if(inGameMode){
+		setSystembackToDefault();
+		inGameMode = false;
+	}
 }
 

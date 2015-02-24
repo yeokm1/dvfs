@@ -17,12 +17,18 @@
 #define CLASSNAME "CPUOdroid"
 
 CPUOdroid::CPUOdroid(){
-
 	initCPUFreqValues();
-	setCPUFreq(0);
 }
 
 CPUOdroid::~CPUOdroid(){
+}
+
+void CPUOdroid::setGovernorToUserspaceAndInit(){
+	writeStringToFile(FILE_CPU_SCALING_GOVERNER, USERSPACE);
+	setCPUFreq(0);
+}
+void CPUOdroid::setGovernorToOndemandAndRevert(){
+	writeStringToFile(FILE_CPU_SCALING_GOVERNER, ONDEMAND);
 }
 
 void CPUOdroid::initCPUFreqValues(){

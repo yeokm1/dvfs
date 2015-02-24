@@ -14,6 +14,8 @@ class CPUOdroid : public CPU{
 public:
 	CPUOdroid();
 	virtual ~CPUOdroid();
+	void setGovernorToUserspaceAndInit();
+	void setGovernorToOndemandAndRevert();
 
 private:
 	void initCPUFreqValues();

@@ -16,6 +16,8 @@ public:
 	virtual ~GPUOdroid();
 	void setGPUFreq(int position);
 	float getUtilisation();
+	void initGPUForModification();
+	void revertGPUToOriginal();
 
 protected:
 	void initGPUFreqValues();

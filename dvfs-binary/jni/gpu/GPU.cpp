@@ -94,3 +94,11 @@ int GPU::getFPS(){
 float GPU::getUtilisation(){
 	return 0;
 }
+
+void GPU::initGPUForModification(){
+	//Do nothing
+}
+
+void GPU::revertGPUToOriginal(){
+	//Do nothing
+}

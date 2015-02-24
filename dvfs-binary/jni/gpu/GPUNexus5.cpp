@@ -18,8 +18,6 @@
 
 GPUNexus5::GPUNexus5() {
 	initGPUFreqValues();
-	setToNoGPUPolicy();
-	setGPUFreq(0);
 }
 
 GPUNexus5::~GPUNexus5() {
@@ -56,6 +54,10 @@ void GPUNexus5::setToNoGPUPolicy(){
 	writeStringToFile(POWER_SCALE_POLICY, "none");
 }
 
+void GPUNexus5::setToDefaultGPUPolicy(){
+	writeStringToFile(POWER_SCALE_POLICY, "trustzone");
+}
+
 
 float GPUNexus5::getUtilisation(){
 	FILE *filePtr = fopen(FILE_GPU_UTIL, "r");
@@ -71,6 +73,14 @@ float GPUNexus5::getUtilisation(){
 		float util = (((float) busyCycles) / totalCycles) * 100;
 		return util;
 	}
+}
+
+void GPUNexus5::initGPUForModification(){
+	setToNoGPUPolicy();
+	setGPUFreq(0);
+}
+void GPUNexus5::revertGPUToOriginal(){
+	setToDefaultGPUPolicy();
 }
 
 

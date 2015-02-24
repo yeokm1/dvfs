@@ -19,8 +19,6 @@
 
 CPUNexus5::CPUNexus5() {
 	initCPUFreqValues();
-	afterSetGovernorToUserspace();
-	setCPUFreq(0);
 }
 
 CPUNexus5::~CPUNexus5() {
@@ -51,12 +49,18 @@ void CPUNexus5::initCPUFreqValues(){
 	}
 
 
-
-
 }
 
-void CPUNexus5::afterSetGovernorToUserspace(){
+void CPUNexus5::setGovernorToUserspaceAndInit(){
+	writeStringToFile(FILE_CPU_SCALING_GOVERNER, USERSPACE);
+	writeValueToFile(FILE_CPU_SET_MIN_FREQ, cpuFreqs[0]);
+	writeValueToFile(FILE_CPU_SET_MAX_FREQ, cpuFreqs[cpuFreqs.size() - 1]);
+	setCPUFreq(0);
+}
+void CPUNexus5::setGovernorToOndemandAndRevert(){
+	writeStringToFile(FILE_CPU_SCALING_GOVERNER, ONDEMAND);
 	writeValueToFile(FILE_CPU_SET_MIN_FREQ, cpuFreqs[0]);
 	writeValueToFile(FILE_CPU_SET_MAX_FREQ, cpuFreqs[cpuFreqs.size() - 1]);
 }
+
 

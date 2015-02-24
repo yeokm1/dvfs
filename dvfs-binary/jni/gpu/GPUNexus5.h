@@ -16,10 +16,13 @@ public:
 	virtual ~GPUNexus5();
 	void setGPUFreq(int position);
 	float getUtilisation();
+	void initGPUForModification();
+	void revertGPUToOriginal();
 
 protected:
 	void initGPUFreqValues();
 	void setToNoGPUPolicy();
+	void setToDefaultGPUPolicy();
 };
 
 #endif /* GPUNEXUS5_H_ */

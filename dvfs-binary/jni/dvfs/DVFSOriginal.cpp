@@ -26,8 +26,13 @@ void DVFSOriginal::regularRunner(){
 
 	if(currentFPS == NO_FPS_CALCULATED){
 		//Recalculate GPU immediately on next try if cannot get FPS
+
+		noFpsDetected();
+
 		currentSlidingWindowPosition = SLIDING_WINDOW_LENGTH;
 	} else {
+
+		fpsDetected();
 
 		int newValueFPS = shouldPursueFPSRecalculationToThisFPS(currentFPS);
 

@@ -14,10 +14,11 @@ class CPUNexus5: public CPU {
 public:
 	CPUNexus5();
 	virtual ~CPUNexus5();
+	void setGovernorToUserspaceAndInit();
+	void setGovernorToOndemandAndRevert();
 
 private:
 	void initCPUFreqValues();
-	void afterSetGovernorToUserspace();
 };
 
 #endif /* CPUNEXUS5_H_ */

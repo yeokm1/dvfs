@@ -23,7 +23,6 @@
 
 GPUOdroid::GPUOdroid() {
 	initGPUFreqValues();
-	setGPUFreq(0);
 }
 
 GPUOdroid::~GPUOdroid() {
@@ -83,4 +82,12 @@ float GPUOdroid::getUtilisation(){
 	numOutput /= 2.56;
 
 	return numOutput;
+}
+
+void GPUOdroid::initGPUForModification(){
+	setGPUFreq(0);
+}
+void GPUOdroid::revertGPUToOriginal(){
+	writeValueToFile(FILE_GPU_MIN_FREQ, gpuFreqs[0]);
+	writeValueToFile(FILE_GPU_MAX_FREQ, gpuFreqs[gpuFreqs.size() - 1]);
 }

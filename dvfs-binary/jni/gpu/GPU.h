@@ -36,6 +36,8 @@ public:
 	int getFPS();
 	virtual void setGPUFreq(int position);
 	virtual float getUtilisation();
+	virtual void initGPUForModification();
+	virtual void revertGPUToOriginal();
 
 protected:
 	vector<long> gpuFreqs;

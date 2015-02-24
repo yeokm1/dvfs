@@ -12,9 +12,7 @@
 
 #define FILE_CPU_UTIL "/proc/stat"
 #define FILE_CPU_SCALING_FREQ  "/sys/devices/system/cpu/cpu0/cpufreq/scaling_setspeed"
-#define FILE_CPU_SCALING_GOVERNER  "/sys/devices/system/cpu/cpu0/cpufreq/scaling_governor"
 
-#define USERSPACE "userspace"
 #define SIZE_PROC_STAT_BUFF 4000
 
 CPU::CPU() {
@@ -26,7 +24,6 @@ CPU::CPU() {
 
 	prevLoad = 0;
 	prevTotal = 0;
-	setGovernorToUserspace();
 	cpuFreqPosition = 0;
 }
 
@@ -39,8 +36,12 @@ void CPU::setCPUFreq(int position){
 	writeValueToFile(FILE_CPU_SCALING_FREQ,  newFrequency);
 }
 
-void CPU::setGovernorToUserspace(){
-	writeStringToFile(FILE_CPU_SCALING_GOVERNER, USERSPACE);
+void CPU::setGovernorToUserspaceAndInit(){
+	//Nothing
+}
+
+void CPU::setGovernorToOndemandAndRevert(){
+	//Nothing
 }
 
 void CPU::initCPUFreqValues(){
