@@ -42,7 +42,7 @@ public:
 
 private:
 	int timeval_subtract(struct timeval *result, struct timeval *t2, struct timeval *t1);
-	bool isPhoneNexus5();
+	bool isPhoneOdroid();
 	string getModel();
 	bool loopInProgress;
 

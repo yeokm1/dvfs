@@ -19,14 +19,14 @@ DVFS::DVFS(int fpsLowBound, int fpsHighBound) {
 	this->loopInProgress = false;
 	this->inGameMode = false;
 
-	if(isPhoneNexus5()){
-		D(printf("Model Nexus 5\n"));
-		cpu = new CPUNexus5();
-		gpu = new GPUNexus5();
-	} else {
-		D(printf("Model not Nexus 5\n"));
+	if(isPhoneOdroid()){
+		D(printf("Model Odroid\n"));
 		cpu = new CPUOdroid();
 		gpu = new GPUOdroid();
+	} else {
+		D(printf("Model Not Odroid\n"));
+		cpu = new CPUNexus5();
+		gpu = new GPUNexus5();
 	}
 }
 
@@ -115,9 +115,9 @@ int DVFS::findLowestFreqPositionThatMeetsThisCost(double costToMeet, vector<long
 	return availableFrequencies.size() - 1;
 }
 
-bool DVFS::isPhoneNexus5(){
+bool DVFS::isPhoneOdroid(){
 	string model = getModel();
-	if(model.compare("Nexus 5") == 0){
+	if(model.compare("ODROID-XU") == 0){
 		return true;
 	} else {
 		return false;
