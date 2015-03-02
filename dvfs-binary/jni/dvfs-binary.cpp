@@ -7,7 +7,6 @@
 
 int main( int argc, char* argv[]){
 
-
 	bool useNew = true;
 
 	if(argc < 3){
