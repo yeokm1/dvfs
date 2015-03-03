@@ -30,3 +30,6 @@ proguard/
 *.so
 /dvfs-binary/libs/armeabi-v7a
 /dvfs-binary/obj
+
+/dvfs-alex/libs/armeabi-v7a
+/dvfs-alex/obj
