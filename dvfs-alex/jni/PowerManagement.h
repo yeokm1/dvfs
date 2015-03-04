@@ -15,7 +15,7 @@
 #define LINE_BUFFER_LENGTH          512
 #define ONE_SECOND                  (1000 * 1000)
 #define GAME_CONST_DELAY            (1 * ONE_SECOND)
-#define SAMPLE_COUNT                135
+#define SAMPLE_COUNT                INT_MAX
 #define MIN_POSSIBLE_FPS            25
 #define MAX_POSSIBLE_FPS            62
 
