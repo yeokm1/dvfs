@@ -12,8 +12,8 @@
 extern int      gGamePID;
 ProcessorTime   procTimeOld;
 
-const int cpuFreqs[] = {800, 900, 1000, 1100, 1200, 1300, 1400, 1500, 1600};
-const float cpuVoltages[] = {0.9, 0.9, 0.9, 1.0, 1.0, 1.0, 1.1, 1.1, 1.1};
+const int cpuFreqs[] = {600, 800, 900, 1000, 1100, 1200, 1300, 1400, 1500, 1600};
+const float cpuVoltages[] = {0.9, 0.9, 0.9, 0.9, 1.0, 1.0, 1.0, 1.1, 1.1, 1.1};
 const int cpuFreqsCount = sizeof(cpuFreqs) / sizeof(int);
 const int cpuVoltagesCount = sizeof(cpuVoltages) / sizeof(float);
 
