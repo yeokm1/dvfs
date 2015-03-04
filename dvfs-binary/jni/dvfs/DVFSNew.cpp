@@ -25,11 +25,19 @@ void DVFSNew::regularRunner(){
 
 		noFpsDetected();
 
+		if(inGameMode == false){
+			return;
+		}
+
 		//Recalculate GPU immediately on next try if cannot get FPS
 		currentSlidingWindowPosition = SLIDING_WINDOW_LENGTH;
 	} else {
 
 		fpsDetected();
+
+		if(inGameMode == false){
+			return;
+		}
 
 		int newValueFPS = shouldPursueFPSRecalculationToThisFPS(currentFPS);
 

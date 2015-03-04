@@ -29,10 +29,18 @@ void DVFSOriginal::regularRunner(){
 
 		noFpsDetected();
 
+		if(inGameMode == false){
+			return;
+		}
+
 		currentSlidingWindowPosition = SLIDING_WINDOW_LENGTH;
 	} else {
 
 		fpsDetected();
+
+		if(inGameMode == false){
+			return;
+		}
 
 		int newValueFPS = shouldPursueFPSRecalculationToThisFPS(currentFPS);
 
