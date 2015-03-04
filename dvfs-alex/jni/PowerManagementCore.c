@@ -71,10 +71,10 @@ void savePower(void)
 
     while(sample < SAMPLE_COUNT)
     {
-        if(15 == sample)
-        {
-            triggerMonitor();
-        }
+//        if(15 == sample)
+//        {
+//            triggerMonitor();
+//        }
 
         updateCounterInfo(&counterInfo);
 
