@@ -10,21 +10,31 @@ int main( int argc, char* argv[]){
 	DVFS * dvfs;
 
 
+	int lowBound;
+	int highBound;
+
 	if(argc < 3){
-		printf("Not enough arguments\n");
-		return 1;
+		lowBound = DYNAMIC_FPS_TARGET;
+		highBound = DYNAMIC_FPS_TARGET;
+
+		printf("Dynamic FPS range selected\n");
+
+	} else {
+		char * lowBoundStr = argv[1];
+		char * highBoundStr = argv[2];
+
+		lowBound = atoi(lowBoundStr);
+		highBound = atoi(highBoundStr);
+
+		if(lowBound > highBound){
+			printf("Low Bound cannot be higher that High bound\n");
+			return 1;
+		} else {
+			printf("FPS range selected %d to %d\n", lowBound, highBound);
+		}
 	}
 
-	char * lowBoundStr = argv[1];
-	char * highBoundStr = argv[2];
 
-	int lowBound = atoi(lowBoundStr);
-	int highBound = atoi(highBoundStr);
-
-	if(lowBound > highBound){
-		printf("Low Bound cannot be higher that High bound\n");
-		return 1;
-	}
 
 
 

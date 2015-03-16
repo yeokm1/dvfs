@@ -10,7 +10,23 @@
 #include <string>
 #include <unistd.h>
 #include <sys/system_properties.h>
+#include "IOStuff.h"
+
+#define BATTERY_LEVEL_BUFF 5
+#define FILE_BATTERY_LEVEL "/sys/class/power_supply/battery/capacity"
+
+#define MIN_OF_MIN_FPS_ALLOWED 30
+#define MAX_OF_MIN_FPS_ALLOWED 55
+#define FPS_GAP 5
+
+#define MIN_BATTERY_CUTOFF 40
+#define MAX_BATTERY_CUTOFF 100
+
+#define MIN_FPS_CUTOFF 30
+#define MAX_FPS_CUTOFF 60
+
 using std::string;
+
 
 DVFS::DVFS(int fpsLowBound, int fpsHighBound) {
 	this->fpsLowBound = fpsLowBound;
@@ -28,6 +44,13 @@ DVFS::DVFS(int fpsLowBound, int fpsHighBound) {
 		D(printf("Model Not Odroid\n"));
 		cpu = new CPUNexus5();
 		gpu = new GPUNexus5();
+	}
+
+
+	if(fpsLowBound == DYNAMIC_FPS_TARGET || fpsHighBound == DYNAMIC_FPS_TARGET){
+		dynamicTargetRange = true;
+	} else {
+		dynamicTargetRange = false;
 	}
 }
 
@@ -144,10 +167,13 @@ void DVFS::setSystembackToDefault(){
 
 void DVFS::fpsDetected(){
 	if(!inGameMode){
-
 		readySystemForDVFS();
 		inGameMode = true;
 		numTimesFPSNotDetected = 0;
+	}
+
+	if(dynamicTargetRange){
+		decideDynamicFPSTarget();
 	}
 }
 
@@ -162,5 +188,43 @@ void DVFS::noFpsDetected(){
 		}
 
 	}
+}
+
+int DVFS::getBatteryLevel(){
+	char buff[BATTERY_LEVEL_BUFF];
+
+	getStringFromFile(FILE_BATTERY_LEVEL, buff, BATTERY_LEVEL_BUFF);
+
+	int level = atoi(buff);
+
+	return level;
+}
+
+void DVFS::decideDynamicFPSTarget(){
+	int battery = getBatteryLevel();
+
+	int targeted = (int) mapRange(MIN_BATTERY_CUTOFF, MAX_BATTERY_CUTOFF, MIN_FPS_CUTOFF, MAX_FPS_CUTOFF, battery);
+
+	if(targeted < MIN_OF_MIN_FPS_ALLOWED){
+		targeted = MIN_OF_MIN_FPS_ALLOWED;
+	} else if(targeted > MAX_OF_MIN_FPS_ALLOWED){
+		targeted = MAX_OF_MIN_FPS_ALLOWED;
+	}
+
+
+	fpsLowBound = targeted;
+	fpsHighBound = fpsLowBound + 5;
+
+
+	D(printf("Battery %d, target range is now %d to %d\n", battery, fpsLowBound, fpsHighBound));
+
+
+
+}
+
+
+double DVFS::mapRange(double a1,double a2,double b1,double b2,double s)
+{
+	return b1 + (s-a1)*(b2-b1)/(a2-a1);
 }
 

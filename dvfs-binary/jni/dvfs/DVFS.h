@@ -30,6 +30,7 @@
 #define DO_NOT_PURSUE_FPS_VALUE -1
 #define SLIDING_WINDOW_LENGTH 5
 #define GO_BACK_TO_ONDEMAND_IF_FPS_NOT_DETECTED 3
+#define DYNAMIC_FPS_TARGET -1
 
 using std::vector;
 using std::string;
@@ -47,6 +48,10 @@ private:
 	string getModel();
 	bool loopInProgress;
 	int numTimesFPSNotDetected;
+	bool dynamicTargetRange;
+	void decideDynamicFPSTarget();
+	int getBatteryLevel();
+	double mapRange(double a1,double a2,double b1,double b2,double s);
 
 protected:
 
