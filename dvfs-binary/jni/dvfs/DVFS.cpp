@@ -18,6 +18,7 @@ DVFS::DVFS(int fpsLowBound, int fpsHighBound) {
 	this->currentSlidingWindowPosition = 0;
 	this->loopInProgress = false;
 	this->inGameMode = false;
+	this->numTimesFPSNotDetected = 0;
 
 	if(isPhoneOdroid()){
 		D(printf("Model Odroid\n"));
@@ -143,15 +144,23 @@ void DVFS::setSystembackToDefault(){
 
 void DVFS::fpsDetected(){
 	if(!inGameMode){
+
 		readySystemForDVFS();
 		inGameMode = true;
+		numTimesFPSNotDetected = 0;
 	}
 }
 
 void DVFS::noFpsDetected(){
 	if(inGameMode){
-		setSystembackToDefault();
-		inGameMode = false;
+
+		numTimesFPSNotDetected++;
+
+		if(numTimesFPSNotDetected > GO_BACK_TO_ONDEMAND_IF_FPS_NOT_DETECTED){
+			setSystembackToDefault();
+			inGameMode = false;
+		}
+
 	}
 }
 

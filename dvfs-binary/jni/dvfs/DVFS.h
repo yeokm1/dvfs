@@ -29,6 +29,7 @@
 #define POLL_RATE_IN_MICROSECOND 1000000  //1 second
 #define DO_NOT_PURSUE_FPS_VALUE -1
 #define SLIDING_WINDOW_LENGTH 5
+#define GO_BACK_TO_ONDEMAND_IF_FPS_NOT_DETECTED 3
 
 using std::vector;
 using std::string;
@@ -45,6 +46,7 @@ private:
 	bool isPhoneOdroid();
 	string getModel();
 	bool loopInProgress;
+	int numTimesFPSNotDetected;
 
 protected:
 
