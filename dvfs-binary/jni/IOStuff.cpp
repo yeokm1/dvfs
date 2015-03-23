@@ -47,3 +47,9 @@ void getStringFromFileByCat(const char * filename, char * buffer, int buffSize){
 	pclose(pp);
 }
 
+void runCommand(const char * command){
+	FILE * run = popen(command, "r");
+	pclose(run);
+
+}
+
