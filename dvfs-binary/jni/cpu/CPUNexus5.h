@@ -19,6 +19,8 @@ public:
 
 private:
 	void initCPUFreqValues();
+	void enableMPDecision();
+	void disableMPDecision();
 };
 
 #endif /* CPUNEXUS5_H_ */
