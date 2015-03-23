@@ -13,6 +13,11 @@
 #define FILE_CPU_UTIL "/proc/stat"
 #define FILE_CPU_SCALING_FREQ  "/sys/devices/system/cpu/cpu0/cpufreq/scaling_setspeed"
 
+#define FILE_CPU_CORE0_STATUS "/sys/devices/system/cpu/cpu0/online"
+#define FILE_CPU_CORE1_STATUS "/sys/devices/system/cpu/cpu1/online"
+#define FILE_CPU_CORE2_STATUS "/sys/devices/system/cpu/cpu2/online"
+#define FILE_CPU_CORE3_STATUS "/sys/devices/system/cpu/cpu3/online"
+
 #define SIZE_PROC_STAT_BUFF 4000
 
 CPU::CPU() {
@@ -131,4 +136,12 @@ float CPU::getUtilisationOfHighestCore(){
 
 	return highestUtil;
 }
+
+void CPU::enableAllCPUCores(){
+	writeValueToFile(FILE_CPU_CORE0_STATUS, 1);
+	writeValueToFile(FILE_CPU_CORE1_STATUS, 1);
+	writeValueToFile(FILE_CPU_CORE2_STATUS, 1);
+	writeValueToFile(FILE_CPU_CORE3_STATUS, 1);
+}
+
 

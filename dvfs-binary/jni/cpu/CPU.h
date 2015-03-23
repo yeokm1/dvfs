@@ -35,6 +35,7 @@ public:
 	float getUtilisationOfHighestCore();
 	virtual void setGovernorToUserspaceAndInit();
 	virtual void setGovernorToOndemandAndRevert();
+	void enableAllCPUCores();
 
 protected:
 	long prevLoad;
