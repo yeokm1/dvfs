@@ -25,6 +25,7 @@ CPUOdroid::~CPUOdroid(){
 
 void CPUOdroid::setGovernorToUserspaceAndInit(){
 	writeStringToFile(FILE_CPU_SCALING_GOVERNER, USERSPACE);
+	enableAllCPUCores();
 	setCPUFreq(0);
 }
 void CPUOdroid::setGovernorToOndemandAndRevert(){
