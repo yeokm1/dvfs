@@ -63,11 +63,11 @@ void CPUNexus5::initCPUFreqValues(){
 }
 
 void CPUNexus5::setGovernorToUserspaceAndInit(){
-	disableMPDecision();
+//	disableMPDecision();
 	writeStringToFile(FILE_CPU_SCALING_GOVERNER, USERSPACE);
 	writeValueToFile(FILE_CPU_SET_MIN_FREQ, cpuFreqs[0]);
 	writeValueToFile(FILE_CPU_SET_MAX_FREQ, cpuFreqs[cpuFreqs.size() - 1]);
-	enableAllCPUCores();
+//	enableAllCPUCores();
 	setCPUFreq(0);
 }
 void CPUNexus5::setGovernorToOndemandAndRevert(){

@@ -80,7 +80,7 @@ void GPUNexus5::initGPUForModification(){
 	setGPUFreq(0);
 }
 void GPUNexus5::revertGPUToOriginal(){
-	setToDefaultGPUPolicy();
+	//setToDefaultGPUPolicy();
 }
 
 
