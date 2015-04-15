@@ -215,8 +215,6 @@ bool DVFS::isCurrentlyCharging(){
 
 	getStringFromFile(FILE_BATTERY_CHARGING, buff, BATTERY_CHARGING_BUFF);
 
-	puts(buff);
-
 	//Compare the number of letters in Charging
 	if(strncmp("Charging", buff, 8) == 0){
 		return true;
