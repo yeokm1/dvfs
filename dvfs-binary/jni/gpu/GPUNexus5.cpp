@@ -17,37 +17,17 @@
 #define CLASSNAME "GPUNexus5"
 
 GPUNexus5::GPUNexus5() {
-	initGPUFreqValues();
+	initGPUFreqValues(FILE_GPU_AVAILABLE_FREQS);
 }
 
 GPUNexus5::~GPUNexus5() {
 }
 
-
-void GPUNexus5::initGPUFreqValues(){
-	char freqLongString[FILE_BUFFER_SIZE];
-
-	getStringFromFileByCat(FILE_GPU_AVAILABLE_FREQS, freqLongString, FILE_BUFFER_SIZE);
-
-	char * freqString;
-	long currentFreq;
-
-	freqString = strtok (freqLongString," ");
-	currentFreq = atol(freqString);
-	gpuFreqs.push_back(currentFreq);
-
-
-	for(int i = 1; (freqString = strtok (NULL, " ")) != NULL; i++){
-		currentFreq = atol(freqString);
-		gpuFreqs.push_back(currentFreq);
-	}
-
-}
-
 void GPUNexus5::setGPUFreq(int position){
 	gpuFreqPosition = position;
 	long newFrequency = gpuFreqs[position];
-	writeValueToFile(FILE_GPU_MAX_FREQ, newFrequency);
+	writeValueToFileWithEcho(FILE_GPU_MAX_FREQ, newFrequency);
+	printf("Set to this GPu freq %ld\n", newFrequency);
 }
 
 void GPUNexus5::setToNoGPUPolicy(){

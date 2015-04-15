@@ -42,7 +42,7 @@ public:
 protected:
 	vector<long> gpuFreqs;
 	int gpuFreqPosition;;
-	virtual void initGPUFreqValues();
+	void initGPUFreqValues(const char * freqFilename);
 };
 
 #endif /* GPU_GPU_H_ */

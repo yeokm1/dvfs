@@ -22,48 +22,10 @@
 #define CLASSNAME "GPUOdroid"
 
 GPUOdroid::GPUOdroid() {
-	initGPUFreqValues();
+	initGPUFreqValues(FILE_GPU_AVAILABLE_FREQS);
 }
 
 GPUOdroid::~GPUOdroid() {
-}
-
-
-void GPUOdroid::initGPUFreqValues(){
-	char freqLongString[FILE_BUFFER_SIZE];
-
-	getStringFromFileByCat(FILE_GPU_AVAILABLE_FREQS, freqLongString, FILE_BUFFER_SIZE);
-
-	char * freqString;
-
-	long currentFreq;
-
-    freqString = strtok (freqLongString," ");
-    currentFreq = atol(freqString);
-
-
-    //We use a stack as the frequencies in the file are in descending order
-    std::stack<long> gpuFreqsStack;
-
-    gpuFreqsStack.push(currentFreq);
-
-	while ((freqString = strtok (NULL, " ")) != NULL){
-	   currentFreq = atol(freqString);
-
-	   if(currentFreq != 0){
-		   gpuFreqsStack.push(currentFreq);
-	   }
-	 }
-
-
-	gpuFreqs.clear();
-
-	while(!gpuFreqsStack.empty()){
-		long freq = gpuFreqsStack.top();
-		gpuFreqsStack.pop();
-		gpuFreqs.push_back(freq);
-	}
-
 }
 
 void GPUOdroid::setGPUFreq(int position){

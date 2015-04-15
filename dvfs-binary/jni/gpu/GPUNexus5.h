@@ -20,7 +20,6 @@ public:
 	void revertGPUToOriginal();
 
 protected:
-	void initGPUFreqValues();
 	void setToNoGPUPolicy();
 	void setToDefaultGPUPolicy();
 };

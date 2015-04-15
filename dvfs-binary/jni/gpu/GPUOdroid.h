@@ -20,7 +20,7 @@ public:
 	void revertGPUToOriginal();
 
 protected:
-	void initGPUFreqValues();
+
 };
 
 #endif /* GPU_GPUODROID_H_ */

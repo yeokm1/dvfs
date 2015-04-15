@@ -19,8 +19,43 @@ GPU::~GPU() {
 }
 
 
-void GPU::initGPUFreqValues(){
-	//Do nothing here
+void GPU::initGPUFreqValues(const char * freqFilename){
+	char freqLongString[FILE_BUFFER_SIZE];
+
+	getStringFromFile(freqFilename, freqLongString, FILE_BUFFER_SIZE);
+
+	char * freqString;
+
+	long currentFreq;
+
+    freqString = strtok (freqLongString," ");
+    currentFreq = atol(freqString);
+
+
+    //We use a stack as the frequencies in the file are in descending order
+    std::stack<long> gpuFreqsStack;
+    long prevFreq = currentFreq;
+
+    gpuFreqsStack.push(currentFreq);
+
+	while ((freqString = strtok (NULL, " ")) != NULL){
+	   currentFreq = atol(freqString);
+
+	   if(currentFreq != 0 && currentFreq != prevFreq){
+		   prevFreq = currentFreq;
+		   gpuFreqsStack.push(currentFreq);
+	   }
+	 }
+
+
+	gpuFreqs.clear();
+
+	while(!gpuFreqsStack.empty()){
+		long freq = gpuFreqsStack.top();
+		gpuFreqsStack.pop();
+		gpuFreqs.push_back(freq);
+	}
+
 }
 
 void GPU::setGPUFreq(int position){
