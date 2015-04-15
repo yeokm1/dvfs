@@ -12,7 +12,7 @@
 
 class DVFSOriginal: public DVFS {
 public:
-	DVFSOriginal(int fpsLowBound, int fpsHighBound);
+	DVFSOriginal(int fpsLowBound, int fpsHighBound, bool maxTargetIfCharging);
 	virtual ~DVFSOriginal();
 
 protected:

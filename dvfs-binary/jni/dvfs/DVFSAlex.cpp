@@ -42,7 +42,7 @@
     float OG, OGi;
 
 
-DVFSAlex::DVFSAlex(int fpsLowBound, int fpsHighBound) : DVFS(fpsLowBound,  fpsHighBound){
+DVFSAlex::DVFSAlex(int fpsLowBound, int fpsHighBound, bool maxTargetIfCharging) : DVFS(fpsLowBound,  fpsHighBound, maxTargetIfCharging){
 Qmin = fpsLowBound;
 Qmax = fpsHighBound;
 

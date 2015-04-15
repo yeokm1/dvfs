@@ -17,7 +17,7 @@
 #include <vector>
 #include <string>
 
-//#define DEBUG
+#define DEBUG
 
 #ifdef DEBUG
 #  define D(x) x
@@ -37,7 +37,7 @@ using std::string;
 
 class DVFS {
 public:
-	DVFS(int fpsLowBound, int fpsHighBound);
+	DVFS(int fpsLowBound, int fpsHighBound, bool maxTargetIfCharging);
 	void startDVFS();
 	void stopDVFS();
 	virtual ~DVFS();
@@ -46,11 +46,13 @@ private:
 	int timeval_subtract(struct timeval *result, struct timeval *t2, struct timeval *t1);
 	bool isPhoneOdroid();
 	string getModel();
+	bool maxTargetIfCharging;
 	bool loopInProgress;
 	int numTimesFPSNotDetected;
 	bool dynamicTargetRange;
 	void decideDynamicFPSTarget();
 	int getBatteryLevel();
+	bool isCurrentlyCharging();
 	double mapRange(double a1,double a2,double b1,double b2,double s);
 
 protected:
@@ -62,6 +64,8 @@ protected:
 	GPU * gpu;
 	int fpsLowBound;
 	int fpsHighBound;
+	int givenFpsLowBound;
+	int givenFpsHighBound;
 	int currentSlidingWindowPosition;
 	virtual void regularRunner();
 	int findLowestFreqPositionThatMeetsThisCost(double costToMeet, vector<long> availableFrequencies, float factor);

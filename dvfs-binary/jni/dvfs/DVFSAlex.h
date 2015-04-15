@@ -12,7 +12,7 @@
 
 class DVFSAlex: public DVFS {
 public:
-	DVFSAlex(int fpsLowBound, int fpsHighBound);
+	DVFSAlex(int fpsLowBound, int fpsHighBound, bool maxTargetIfCharging);
 	virtual ~DVFSAlex();
 
 protected:

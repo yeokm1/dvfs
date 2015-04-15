@@ -13,11 +13,16 @@
 #include "IOStuff.h"
 
 #define BATTERY_LEVEL_BUFF 5
+#define BATTERY_CHARGING_BUFF 20
 #define FILE_BATTERY_LEVEL "/sys/class/power_supply/battery/capacity"
+#define FILE_BATTERY_CHARGING "/sys/class/power_supply/battery/status"
 
 #define MIN_OF_MIN_FPS_ALLOWED 30
 #define MAX_OF_MIN_FPS_ALLOWED 55
 #define FPS_GAP 5
+
+#define MAX_FPS_TARGET_MIN 55
+#define MAX_FPS_TARGET_MAX 60
 
 #define MIN_BATTERY_CUTOFF 40
 #define MAX_BATTERY_CUTOFF 100
@@ -28,13 +33,18 @@
 using std::string;
 
 
-DVFS::DVFS(int fpsLowBound, int fpsHighBound) {
+DVFS::DVFS(int fpsLowBound, int fpsHighBound, bool maxTargetIfCharging) {
 	this->fpsLowBound = fpsLowBound;
 	this->fpsHighBound = fpsHighBound;
+
+	this->givenFpsLowBound = fpsLowBound;
+	this->givenFpsHighBound = fpsHighBound;
+
 	this->currentSlidingWindowPosition = 0;
 	this->loopInProgress = false;
 	this->inGameMode = false;
 	this->numTimesFPSNotDetected = 0;
+	this->maxTargetIfCharging = maxTargetIfCharging;
 
 	if(isPhoneOdroid()){
 		D(printf("Model Odroid\n"));
@@ -172,7 +182,7 @@ void DVFS::fpsDetected(){
 		numTimesFPSNotDetected = 0;
 	}
 
-	if(dynamicTargetRange){
+	if(dynamicTargetRange || maxTargetIfCharging){
 		decideDynamicFPSTarget();
 	}
 }
@@ -200,25 +210,62 @@ int DVFS::getBatteryLevel(){
 	return level;
 }
 
+bool DVFS::isCurrentlyCharging(){
+	char buff[BATTERY_CHARGING_BUFF];
+
+	getStringFromFile(FILE_BATTERY_CHARGING, buff, BATTERY_CHARGING_BUFF);
+
+	puts(buff);
+
+	//Compare the number of letters in Charging
+	if(strncmp("Charging", buff, 8) == 0){
+		return true;
+	} else {
+		return false;
+	}
+
+}
+
 void DVFS::decideDynamicFPSTarget(){
-	int battery = getBatteryLevel();
 
-	int targeted = (int) mapRange(MIN_BATTERY_CUTOFF, MAX_BATTERY_CUTOFF, MIN_FPS_CUTOFF, MAX_FPS_CUTOFF, battery);
+	if(maxTargetIfCharging){
+		bool isCharging = isCurrentlyCharging();
 
-	if(targeted < MIN_OF_MIN_FPS_ALLOWED){
-		targeted = MIN_OF_MIN_FPS_ALLOWED;
-	} else if(targeted > MAX_OF_MIN_FPS_ALLOWED){
-		targeted = MAX_OF_MIN_FPS_ALLOWED;
+		if(isCharging){
+			fpsLowBound = MAX_FPS_TARGET_MIN;
+			fpsHighBound = MAX_FPS_TARGET_MAX;
+
+			D(printf("Battery is charging, set to max target range %d to %d\n",  MAX_FPS_TARGET_MIN,  MAX_FPS_TARGET_MAX));
+
+			return;
+		} else {
+			fpsLowBound = givenFpsLowBound;
+			fpsHighBound = givenFpsHighBound;
+		}
 	}
 
 
-	fpsLowBound = targeted;
-	fpsHighBound = fpsLowBound + 5;
+	if(dynamicTargetRange){
 
 
-	D(printf("Battery %d, target range is now %d to %d\n", battery, fpsLowBound, fpsHighBound));
+		int battery = getBatteryLevel();
+
+		int targeted = (int) mapRange(MIN_BATTERY_CUTOFF, MAX_BATTERY_CUTOFF, MIN_FPS_CUTOFF, MAX_FPS_CUTOFF, battery);
+
+		if(targeted < MIN_OF_MIN_FPS_ALLOWED){
+			targeted = MIN_OF_MIN_FPS_ALLOWED;
+		} else if(targeted > MAX_OF_MIN_FPS_ALLOWED){
+			targeted = MAX_OF_MIN_FPS_ALLOWED;
+		}
 
 
+		fpsLowBound = targeted;
+		fpsHighBound = fpsLowBound + 5;
+
+
+		D(printf("Battery %d, target range is now %d to %d\n", battery, fpsLowBound, fpsHighBound));
+
+	}
 
 }
 

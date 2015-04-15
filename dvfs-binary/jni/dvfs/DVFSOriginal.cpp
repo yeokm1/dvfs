@@ -7,7 +7,7 @@
 
 #include <dvfs/DVFSOriginal.h>
 
-DVFSOriginal::DVFSOriginal(int fpsLowBound, int fpsHighBound) : DVFS(fpsLowBound,  fpsHighBound){
+DVFSOriginal::DVFSOriginal(int fpsLowBound, int fpsHighBound, bool maxTargetIfCharging) : DVFS(fpsLowBound,  fpsHighBound, maxTargetIfCharging){
 
 
 }

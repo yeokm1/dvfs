@@ -9,8 +9,7 @@
 
 #define TARGET_CPU_UTILISATION 80
 
-DVFSNew::DVFSNew(int fpsLowBound, int fpsHighBound) : DVFS(fpsLowBound,  fpsHighBound){
-
+DVFSNew::DVFSNew(int fpsLowBound, int fpsHighBound, bool maxTargetIfCharging) : DVFS(fpsLowBound,  fpsHighBound, maxTargetIfCharging){
 }
 
 DVFSNew::~DVFSNew() {

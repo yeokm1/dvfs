@@ -36,25 +36,42 @@ int main( int argc, char* argv[]){
 
 
 
+	bool maxTargetIfCharging = false;
+
+
+
+	for(int i = 0; i < argc; i++){
+		if(strcmp(argv[i], "-chg") == 0){
+			maxTargetIfCharging = true;
+		}
+	}
+
+	if(maxTargetIfCharging){
+		printf("Max FPS target if charging\n");
+	} else {
+		printf("Max target when charging NOT selected\n");
+	}
+
+
 
 
 	if(argc >= 4){
 		if(strcmp(argv[3], "-org") == 0){
 
 			printf("Selected DVFS Original\n");
-			dvfs = new DVFSOriginal(lowBound, highBound);
+			dvfs = new DVFSOriginal(lowBound, highBound, maxTargetIfCharging);
 		} else if(strcmp(argv[3], "-alex") == 0){
 
 			printf("Selected DVFS Alex\n");
-			dvfs = new DVFSAlex(lowBound, highBound);
+			dvfs = new DVFSAlex(lowBound, highBound, maxTargetIfCharging);
 		} else {
 
 			printf("Selected DVFS New\n");
-			dvfs = new DVFSNew(lowBound, highBound);
+			dvfs = new DVFSNew(lowBound, highBound, maxTargetIfCharging);
 		}
 	} else {
 		printf("Selected DVFS New\n");
-		dvfs = new DVFSNew(lowBound, highBound);
+		dvfs = new DVFSNew(lowBound, highBound, maxTargetIfCharging);
 	}
 
 
