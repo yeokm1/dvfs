@@ -12,6 +12,8 @@
 
 void writeStringToFile(const char * filename, const char * value);
 void writeValueToFile(const char * filename, long value);
+void writeStringToFileWithEcho(const char * filename, const char * value);
+void writeValueToFileWithEcho(const char * filename, long value);
 float getValueFromFile(const char * filename);
 void getStringFromFile(const char * filename, char * buffer, int buffSize);
 void getStringFromFileByCat(const char * filename, char * buffer, int buffSize);

@@ -8,6 +8,9 @@
 #define COMMAND_LENGTH 200
 #define CLASSNAME "IOStuff"
 
+#define ECHO_VALUE_COMMAND "echo %ld > %s"
+#define ECHO_STRING_COMMAND "echo %s > %s"
+
 void writeStringToFile(const char * filePath, const char * value){
     FILE  *filePtr = fopen(filePath, "w");
     fputs(value, filePtr);
@@ -18,6 +21,18 @@ void writeValueToFile(const char * filePath, long value){
     FILE  *filePtr = fopen(filePath, "w");
     fprintf(filePtr, "%ld", value);
     fclose(filePtr);
+}
+
+void writeStringToFileWithEcho(const char * filePath, const char * value){
+	char buff[COMMAND_LENGTH];
+	sprintf(buff, ECHO_STRING_COMMAND, value, filePath);
+	runCommand(buff);
+}
+
+void writeValueToFileWithEcho(const char * filePath, long value){
+	char buff[COMMAND_LENGTH];
+	sprintf(buff, ECHO_VALUE_COMMAND, value, filePath);
+	runCommand(buff);
 }
 
 float getValueFromFile(const char * filename){
