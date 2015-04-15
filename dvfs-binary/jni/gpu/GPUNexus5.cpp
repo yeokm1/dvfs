@@ -27,7 +27,6 @@ void GPUNexus5::setGPUFreq(int position){
 	gpuFreqPosition = position;
 	long newFrequency = gpuFreqs[position];
 	writeValueToFileWithEcho(FILE_GPU_MAX_FREQ, newFrequency);
-	printf("Set to this GPu freq %ld\n", newFrequency);
 }
 
 void GPUNexus5::setToNoGPUPolicy(){
