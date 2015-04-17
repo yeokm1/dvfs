@@ -56,8 +56,6 @@ void GPU::initGPUFreqValues(const char * freqFilename){
 		long freq = gpuFreqsStack.top();
 		gpuFreqsStack.pop();
 		gpuFreqs.push_back(freq);
-
-		printf("%ld\n", freq);
 	}
 
 }
