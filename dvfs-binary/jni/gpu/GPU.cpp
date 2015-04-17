@@ -43,7 +43,7 @@ void GPU::initGPUFreqValues(const char * freqFilename){
 
 	   if(currentFreq != 0
 			   && (currentFreq != prevFreq) //Nexus 5 has cases of repeated frequencies
-			   && (currentFreq != 600000)){ //Odroid has this pecular value
+			   && (currentFreq != 600000)){ //Odroid has this peculiar value that must be ignored
 		   prevFreq = currentFreq;
 		   gpuFreqsStack.push(currentFreq);
 	   }
