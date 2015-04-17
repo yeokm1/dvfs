@@ -41,7 +41,9 @@ void GPU::initGPUFreqValues(const char * freqFilename){
 	while ((freqString = strtok (NULL, " ")) != NULL){
 	   currentFreq = atol(freqString);
 
-	   if(currentFreq != 0 && currentFreq != prevFreq){
+	   if(currentFreq != 0
+			   && (currentFreq != prevFreq) //Nexus 5 has cases of repeated frequencies
+			   && (currentFreq != 600000)){ //Odroid has this pecular value
 		   prevFreq = currentFreq;
 		   gpuFreqsStack.push(currentFreq);
 	   }
@@ -54,6 +56,8 @@ void GPU::initGPUFreqValues(const char * freqFilename){
 		long freq = gpuFreqsStack.top();
 		gpuFreqsStack.pop();
 		gpuFreqs.push_back(freq);
+
+		printf("%ld\n", freq);
 	}
 
 }
