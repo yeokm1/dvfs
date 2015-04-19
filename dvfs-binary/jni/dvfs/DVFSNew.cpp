@@ -104,7 +104,9 @@ void DVFSNew::makeGPUMeetThisFPS(int targetFPS, int currentFPS, GPU * gpu){
 	int newGPUFreqPosition = findLowestFreqPositionThatMeetsThisCost(currentCost, gpuFreqs, 1);
 
 
-	if(currentGPUFreqPosition != newGPUFreqPosition){
+
+	//My Nexus 5 implementation may have a bug which I cannot locate. We have to set the GPU frequency everytime regardless of current status
+	if(!isOdroid || currentGPUFreqPosition != newGPUFreqPosition){
 		gpu->setGPUFreq(newGPUFreqPosition);
 	}
 

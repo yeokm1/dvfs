@@ -59,6 +59,7 @@ protected:
 
 	void fpsDetected();
 	void noFpsDetected();
+	bool isOdroid;
 	bool inGameMode;
 	CPU * cpu;
 	GPU * gpu;

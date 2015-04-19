@@ -50,10 +50,12 @@ DVFS::DVFS(int fpsLowBound, int fpsHighBound, bool maxTargetIfCharging) {
 		D(printf("Model Odroid\n"));
 		cpu = new CPUOdroid();
 		gpu = new GPUOdroid();
+		isOdroid = true;
 	} else {
 		D(printf("Model Not Odroid\n"));
 		cpu = new CPUNexus5();
 		gpu = new GPUNexus5();
+		isOdroid = false;
 	}
 
 
