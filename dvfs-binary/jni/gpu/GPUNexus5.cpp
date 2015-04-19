@@ -11,6 +11,7 @@
 
 #define POWER_SCALE_POLICY "/sys/class/kgsl/kgsl-3d0/pwrscale/policy"
 #define FILE_GPU_MAX_FREQ "/sys/class/kgsl/kgsl-3d0/max_gpuclk"
+#define FILE_GPU_FREQ "/sys/class/kgsl/kgsl-3d0/gpuclk"
 #define FILE_GPU_AVAILABLE_FREQS "/sys/class/kgsl/kgsl-3d0/gpu_available_frequencies"
 #define FILE_GPU_UTIL "/sys/class/kgsl/kgsl-3d0/gpubusy"
 
@@ -24,9 +25,11 @@ GPUNexus5::~GPUNexus5() {
 }
 
 void GPUNexus5::setGPUFreq(int position){
+
 	gpuFreqPosition = position;
 	long newFrequency = gpuFreqs[position];
-	writeValueToFileWithEcho(FILE_GPU_MAX_FREQ, newFrequency);
+	writeValueToFile(FILE_GPU_FREQ, newFrequency);
+
 }
 
 void GPUNexus5::setToNoGPUPolicy(){
@@ -56,6 +59,7 @@ float GPUNexus5::getUtilisation(){
 
 void GPUNexus5::initGPUForModification(){
 	setToNoGPUPolicy();
+	writeValueToFile(FILE_GPU_MAX_FREQ, gpuFreqs[gpuFreqs.size() - 1]);
 	setGPUFreq(0);
 }
 void GPUNexus5::revertGPUToOriginal(){
