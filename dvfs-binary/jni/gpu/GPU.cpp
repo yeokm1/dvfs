@@ -108,6 +108,10 @@ int GPU::getFPS(){
 	}
 
 	int frameCount = 0;
+
+	//Ignore the last value is it can be invalid on some systems, notably the Nexus 5
+	values.pop();
+
 	long long lastFrameFinishedTime = values.top();
 
 	while(!values.empty()){
