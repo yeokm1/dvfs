@@ -1,7 +1,7 @@
 dvfs-odroid
 ===========
 
-A C++ native Android app that does dynamic frequency scaling to achieve a target frames-per-second (FPS). FPS is provided via command line arguments. Has been tested to work only on Nexus 5 and Odroid-XU.
+A C++ native Android program that does dynamic frequency scaling to achieve a target frames-per-second (FPS). FPS is provided via command line arguments. Has been tested to work only on Nexus 5 and Odroid-XU.
 
 Designed to work with the frontend app [here](https://github.com/yeokm1/dvfsapp/).
 
